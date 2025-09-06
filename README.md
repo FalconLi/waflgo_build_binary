@@ -19,6 +19,9 @@ Docker Container
 docker run -d --name waflgo-mujs-65 waflgo_image tail -f /dev/null
 docker exec -it waflgo-mujs-65 /bin/bash
 ```
+Compile WAFLGo<br>
+Refer to the commands [here](https://github.com/NESA-Lab/WAFLGo/tree/master#how-to-test-with-waflgo)
+
 Download Subject
 ```commandline
 git clone https://codeberg.org/ccxvii/mujs.git /home/waflgo-mujs
@@ -83,6 +86,9 @@ Docker Container
 docker run -d --name waflgo-mujs-141 waflgo_image tail -f /dev/null
 docker exec -it waflgo-mujs-141 /bin/bash
 ```
+Compile WAFLGo<br>
+Refer to the commands [here](https://github.com/NESA-Lab/WAFLGo/tree/master#how-to-test-with-waflgo)
+
 Download Subject
 ```commandline
 git clone https://codeberg.org/ccxvii/mujs.git /home/waflgo-mujs
