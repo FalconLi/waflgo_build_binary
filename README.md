@@ -12,8 +12,14 @@ docker build -t walfgo_image .
 ```
 An image with the name walfgo_image is built.
 
-## Build Binary Commands
+## Commands for Commits Evaluated in Paper
 ### mujs-issue-65
+Download Subject
+```commandline
+git clone https://codeberg.org/ccxvii/mujs.git /home/waflgo-mujs
+cd /home/mujs; git checkout 8c27b12
+```
+Build Binary
 ```commandline
 export CC=/home/WAFLGo/afl-clang-fast
 export CXX=/home/WAFLGo/afl-clang-fast++
@@ -29,5 +35,32 @@ get-bc mujs
 
 mkdir fuzz
 cd fuzz
-cp ../mujs .
+cp ../mujs.bc .
 
+echo $'' > $TMP_DIR/BBtargets.txt
+git diff HEAD^1 HEAD > ./commit.diff
+cp /home/showlinenum.awk ./
+sed -i -e 's/\r$//' showlinenum.awk
+chmod +x showlinenum.awk
+cat ./commit.diff |  ./showlinenum.awk show_header=0 path=1 | grep -e "\.[ch]:[0-9]*:+" -e "\.cpp:[0-9]*:+" -e "\.cc:[0-9]*:+" | cut -d+ -f1 | rev | cut -c2- | rev > ./targets
+
+/home/WAFLGo/instrument/bin/cbi --targets=targets mujs.bc --stats=false
+cp ./targets_id.txt /home
+cp ./suffix.txt /home
+cp ./targets*.txt /home
+cp ./distance.txt /home
+cp ./branch-distance.txt /home
+cp ./branch-distance-min.txt /home
+cp ./branch-curloc.txt /home
+cp ./*_data.txt /home
+
+/home/WAFLGo/afl-clang-fast++ mujs.ci.bc  -lstdc++  -o mujs.ci
+cp ./bbinfo-fast.txt /home/bbinfo-ci-bc.txt
+cp ./branch-distance-order.txt /home
+cp ./*-distance-order.txt /home
+cp ./*-order.txt /home
+```
+Start fuzzing
+```commandline
+cd /home
+/home/WAFLGo/afl-fuzz  -T waflgo-mujs -t 1000+ -m none -z exp -c 45m -q 1 -i /home/js -o /home/out -- /home/waflgo-mujs/fuzz/mujs.ci  @@
