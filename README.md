@@ -74,6 +74,5 @@ cp ./*-order.txt /home
 ```
 Start fuzzing
 ```commandline
-cd /home
 /home/WAFLGo/afl-fuzz  -T waflgo-mujs -t 1000+ -m none -z exp -c 45m -q 1 -i /home/js -o /home/out -- /home/waflgo-mujs/fuzz/mujs.ci  @@
 ```
