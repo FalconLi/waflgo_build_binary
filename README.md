@@ -3,7 +3,7 @@ It contains the commands to build the binaries for all the commits evaluated in 
 
 The [Github repository](https://github.com/NESA-Lab/WAFLGo) of the paper only provides command to build the binary of libjpeg-issue-493. This directory will provide commands to build binaries of all the commits evaluated in the paper.
 
-## Docker Image
+## Docker
 The Docker image provided by the authors have a serious bug inside. You cannot pull this image if you are using rootless Docker, which restricts the running of the program on remote servers.
 A Dockerfile is provided to build an image with the bug solved
 Use the following command in the directory where Dockerfile is present to build the image:
@@ -21,6 +21,11 @@ git clone https://github.com/unifuzz/seeds.git
 
 ## Commands for Commits Evaluated in Paper
 ### mujs-issue-65
+Docker Container
+```commandline
+docker run -d --name waflgo-mujs-65 walfgo_image tail -f /dev/null
+docker exec -it waflgo-mujs-65 /bin/bash
+```
 Download Subject
 ```commandline
 git clone https://codeberg.org/ccxvii/mujs.git /home/waflgo-mujs
