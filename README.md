@@ -12,13 +12,6 @@ docker build -t waflgo_image .
 ```
 An image with the name waflgo_image is built.
 
-## Seeds
-Clone the seeds used in the paper.
-```commandline
-cd /home
-git clone https://github.com/unifuzz/seeds.git
-```
-
 ## Commands for Commits Evaluated in Paper
 ### mujs-issue-65
 Docker Container
@@ -33,6 +26,8 @@ cd /home/mujs; git checkout 8c27b12
 ```
 Copy Seeds to Required Dictionary
 ```commandline
+cd /home
+git clone https://github.com/unifuzz/seeds.git
 mkdir js
 cp /home/seeds/general_evaluation/mujs/* /home/js/
 ```
