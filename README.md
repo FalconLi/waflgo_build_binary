@@ -12,6 +12,13 @@ docker build -t walfgo_image .
 ```
 An image with the name walfgo_image is built.
 
+## Seeds
+Clone the seeds used in the paper.
+```commandline
+cd /home
+git clone https://github.com/unifuzz/seeds.git
+```
+
 ## Commands for Commits Evaluated in Paper
 ### mujs-issue-65
 Download Subject
