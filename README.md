@@ -8,9 +8,9 @@ The Docker image provided by the authors have a serious bug inside. You cannot p
 A Dockerfile is provided to build an image with the bug solved
 Use the following command in the directory where Dockerfile is present to build the image:
 ```commandline
-docker build -t walfgo_image .
+docker build -t waflgo_image .
 ```
-An image with the name walfgo_image is built.
+An image with the name waflgo_image is built.
 
 ## Seeds
 Clone the seeds used in the paper.
@@ -23,7 +23,7 @@ git clone https://github.com/unifuzz/seeds.git
 ### mujs-issue-65
 Docker Container
 ```commandline
-docker run -d --name waflgo-mujs-65 walfgo_image tail -f /dev/null
+docker run -d --name waflgo-mujs-65 waflgo_image tail -f /dev/null
 docker exec -it waflgo-mujs-65 /bin/bash
 ```
 Download Subject
