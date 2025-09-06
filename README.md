@@ -22,7 +22,7 @@ docker exec -it waflgo-mujs-65 /bin/bash
 Download Subject
 ```commandline
 git clone https://codeberg.org/ccxvii/mujs.git /home/waflgo-mujs
-cd /home/mujs; git checkout 8c27b12
+cd /home/waflgo-mujs; git checkout 8c27b12
 ```
 Copy Seeds to Required Dictionary
 ```commandline
@@ -86,7 +86,7 @@ docker exec -it waflgo-mujs-141 /bin/bash
 Download Subject
 ```commandline
 git clone https://codeberg.org/ccxvii/mujs.git /home/waflgo-mujs
-cd /home/mujs; git checkout 832e069
+cd /home/waflgo-mujs; git checkout 832e069
 ```
 Copy Seeds to Required Dictionary
 ```commandline
