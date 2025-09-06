@@ -26,6 +26,11 @@ Download Subject
 git clone https://codeberg.org/ccxvii/mujs.git /home/waflgo-mujs
 cd /home/mujs; git checkout 8c27b12
 ```
+Copy Seeds to Required Dictionary
+```commandline
+mkdir js
+cp /home/seeds/general_evaluation/mujs/* /home/js/
+```
 Build Binary
 ```commandline
 export CC=/home/WAFLGo/afl-clang-fast
@@ -70,4 +75,5 @@ cp ./*-order.txt /home
 Start fuzzing
 ```commandline
 cd /home
-/home/WAFLGo/afl-fuzz  -T waflgo-mujs -t 1000+ -m none -z exp -c 45m -q 1 -i /home/seeds/general_evaluation/mujs -o /home/out -- /home/waflgo-mujs/fuzz/mujs.ci  @@
+/home/WAFLGo/afl-fuzz  -T waflgo-mujs -t 1000+ -m none -z exp -c 45m -q 1 -i /home/js -o /home/out -- /home/waflgo-mujs/fuzz/mujs.ci  @@
+```
