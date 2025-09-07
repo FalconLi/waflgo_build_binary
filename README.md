@@ -99,7 +99,7 @@ cp /home/seeds/general_evaluation/mujs/* /home/js/
 Download Subject
 ```commandline
 git clone https://codeberg.org/ccxvii/mujs.git /home/waflgo-mujs
-cd /home/waflgo-mujs; git caheckout 832e069
+cd /home/waflgo-mujs; git checkout 832e069
 ```
 Build Binary
 ```commandline
