@@ -22,17 +22,17 @@ docker exec -it waflgo-mujs-65 /bin/bash
 Compile WAFLGo<br>
 Refer to the commands [here](https://github.com/NESA-Lab/WAFLGo/tree/master#how-to-test-with-waflgo)
 
-Download Subject
-```commandline
-git clone https://codeberg.org/ccxvii/mujs.git /home/waflgo-mujs
-cd /home/waflgo-mujs; git checkout 8c27b12
-```
 Copy Seeds to Required Dictionary
 ```commandline
 cd /home
 git clone https://github.com/unifuzz/seeds.git
 mkdir js
 cp /home/seeds/general_evaluation/mujs/* /home/js/
+```
+Download Subject
+```commandline
+git clone https://codeberg.org/ccxvii/mujs.git /home/waflgo-mujs
+cd /home/waflgo-mujs; git checkout 8c27b12
 ```
 Build Binary
 ```commandline
@@ -89,17 +89,17 @@ docker exec -it waflgo-mujs-141 /bin/bash
 Compile WAFLGo<br>
 Refer to the commands [here](https://github.com/NESA-Lab/WAFLGo/tree/master#how-to-test-with-waflgo)
 
-Download Subject
-```commandline
-git clone https://codeberg.org/ccxvii/mujs.git /home/waflgo-mujs
-cd /home/waflgo-mujs; git checkout 832e069
-```
 Copy Seeds to Required Dictionary
 ```commandline
 cd /home
 git clone https://github.com/unifuzz/seeds.git
 mkdir js
 cp /home/seeds/general_evaluation/mujs/* /home/js/
+```
+Download Subject
+```commandline
+git clone https://codeberg.org/ccxvii/mujs.git /home/waflgo-mujs
+cd /home/waflgo-mujs; git caheckout 832e069
 ```
 Build Binary
 ```commandline
