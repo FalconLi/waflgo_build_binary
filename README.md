@@ -308,8 +308,8 @@ export CC=/home/WAFLGo/afl-clang-fast CXX=/home/WAFLGo/afl-clang-fast++  CFLAGS=
 export AFL_CC=gclang
 export AFL_CXX=gclang++
 
- cmake -DLIBXML2_WITH_LZMA=OFF .
-make clean;make
+cmake -DLIBXML2_WITH_LZMA=OFF -DBUILD_SHARED_LIBS=OFF .
+make clean; make
 unset AFL_CC AFL_CXX
 
 get-bc xmllint
@@ -335,7 +335,7 @@ cp ./branch-distance-min.txt /home
 cp ./branch-curloc.txt /home
 cp ./*_data.txt /home
 
-/home/WAFLGo/afl-clang-fast++ xmllint.ci.bc -L.. -lxml2 -o xmllint.ci
+/home/WAFLGo/afl-clang-fast++ xmllint.ci.bc -L.. -l:libxml2.a -o xmllint.ci
 cp ./bbinfo-fast.txt /home/bbinfo-ci-bc.txt
 cp ./branch-distance-order.txt /home
 cp ./*-distance-order.txt /home
