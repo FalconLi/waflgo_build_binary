@@ -146,3 +146,38 @@ Start fuzzing
 ```commandline
 /home/WAFLGo/afl-fuzz  -T waflgo-mujs -t 1000+ -m none -z exp -c 45m -q 1 -i /home/js -o /home/out -- /home/waflgo-mujs/fuzz/mujs.ci  @@
 ```
+
+### mujs-issue-145
+Docker Container
+```commandline
+docker run -d --name waflgo-mujs-141 waflgo_image tail -f /dev/null
+docker exec -it waflgo-mujs-141 /bin/bash
+```
+Compile WAFLGo<br>
+Refer to the commands [here](https://github.com/NESA-Lab/WAFLGo/tree/master#how-to-test-with-waflgo)
+
+Copy Seeds to Required Dictionary
+```commandline
+cd /home
+git clone https://github.com/unifuzz/seeds.git
+mkdir js
+cp /home/seeds/general_evaluation/mujs/* /home/js/
+```
+Download Subject
+```commandline
+git clone https://codeberg.org/ccxvii/mujs.git /home/waflgo-mujs
+cd /home/waflgo-mujs; git checkout 4c7f6be
+```
+Build Binary
+```commandline
+export CC=/home/WAFLGo/afl-clang-fast
+export CXX=/home/WAFLGo/afl-clang-fast++
+export AFL_CC=gclang
+export AFL_CXX=gclang++
+
+make clean
+```
+Start fuzzing
+```commandline
+
+```
