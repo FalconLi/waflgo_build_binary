@@ -176,7 +176,7 @@ export AFL_CC=gclang
 export AFL_CXX=gclang++
 
 make clean
-make CFLAGS="-g --notI" CXXFLAGS="-g --notI"
+make CFLAGS="-g --notI" CXXFLAGS="-g --notI" HAVE_READLINE=no
 unset AFL_CC AFL_CXX
 
 cp build/release/mujs ./
@@ -208,6 +208,41 @@ cp ./bbinfo-fast.txt /home/bbinfo-ci-bc.txt
 cp ./branch-distance-order.txt /home
 cp ./*-distance-order.txt /home
 cp ./*-order.txt /home
+```
+Start fuzzing
+```commandline
+/home/WAFLGo/afl-fuzz  -T waflgo-mujs -t 1000+ -m none -z exp -c 45m -q 1 -i /home/js -o /home/out -- /home/waflgo-mujs/fuzz/mujs.ci  @@
+```
+
+### mujs-issue-166
+Docker Container
+```commandline
+docker run -d --name waflgo-mujs-166 waflgo_image tail -f /dev/null
+docker exec -it waflgo-mujs-166 /bin/bash
+```
+Compile WAFLGo<br>
+Refer to the commands [here](https://github.com/NESA-Lab/WAFLGo/tree/master#how-to-test-with-waflgo)
+
+Copy Seeds to Required Dictionary
+```commandline
+cd /home
+git clone https://github.com/unifuzz/seeds.git
+mkdir js
+cp /home/seeds/general_evaluation/mujs/* /home/js/
+```
+Download Subject
+```commandline
+git clone https://codeberg.org/ccxvii/mujs.git /home/waflgo-mujs
+cd /home/waflgo-mujs; git checkout 3f71a1c
+```
+Build Binary
+```commandline
+export CC=/home/WAFLGo/afl-clang-fast
+export CXX=/home/WAFLGo/afl-clang-fast++
+export AFL_CC=gclang
+export AFL_CXX=gclang++
+
+make clean
 ```
 Start fuzzing
 ```commandline
