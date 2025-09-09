@@ -335,7 +335,7 @@ cp ./branch-distance-min.txt /home
 cp ./branch-curloc.txt /home
 cp ./*_data.txt /home
 
-/home/WAFLGo/afl-clang-fast++ xmllint.ci.bc  -lstdc++  -o xmllint.ci
+/home/WAFLGo/afl-clang-fast++ xmllint.ci.bc -L.. -lxml2 -o xmllint.ci
 cp ./bbinfo-fast.txt /home/bbinfo-ci-bc.txt
 cp ./branch-distance-order.txt /home
 cp ./*-distance-order.txt /home
