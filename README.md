@@ -243,7 +243,7 @@ export AFL_CC=gclang
 export AFL_CXX=gclang++
 
 make clean
-make CFLAGS="-g --notI" CXXFLAGS="-g --notI"
+make CFLAGS="-g --notI" CXXFLAGS="-g --notI" HAVE_READLINE=no
 unset AFL_CC AFL_CXX
 
 cp build/release/mujs ./
