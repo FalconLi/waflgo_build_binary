@@ -346,3 +346,68 @@ Start fuzzing
 /home/WAFLGo/afl-fuzz  -T waflgo-xmllint -t 1000+ -m none -z exp -c 45m -q 1 -i /home/xml -o /home/out -- /home/waflgo-xmllint/fuzz-walfgo/xmllint.ci  @@
 ```
 
+### libxml2-issue-550
+Docker Container
+```commandline
+docker run -d --name waflgo-libxml2-550 waflgo_image tail -f /dev/null
+docker exec -it waflgo-libxml2-550 /bin/bash
+```
+Compile WAFLGo<br>
+Refer to the commands [here](https://github.com/NESA-Lab/WAFLGo/tree/master#how-to-test-with-waflgo)
+
+Copy Seeds to Required Dictionary
+```commandline
+git clone https://gitlab.gnome.org/GNOME/libxml2.git /home/waflgo-libxml2
+mkdir /home/xml
+cp /home/waflgo-libxml2/fuzz/static_seed/regexp/* /home/xml/
+cp /home/waflgo-libxml2/fuzz/static_seed/uri/* /home/xml/
+```
+Download Subject
+```commandline
+cd /home/waflgo-libxml2; git checkout 7e3f469
+```
+Build Binary
+```commandline
+export ADD="-g --notI "
+export CC=/home/WAFLGo/afl-clang-fast CXX=/home/WAFLGo/afl-clang-fast++  CFLAGS="$ADD" CXXFLAGS="$ADD"
+export AFL_CC=gclang
+export AFL_CXX=gclang++
+
+cmake -DLIBXML2_WITH_LZMA=OFF -DBUILD_SHARED_LIBS=OFF .
+make clean; make
+unset AFL_CC AFL_CXX
+
+get-bc xmllint
+
+mkdir fuzz-walfgo
+cd fuzz-walfgo
+cp ../xmllint.bc .
+
+echo $'' > $TMP_DIR/BBtargets.txt
+git diff HEAD^1 HEAD > ./commit.diff
+cp /home/showlinenum.awk ./
+sed -i -e 's/\r$//' showlinenum.awk
+chmod +x showlinenum.awk
+cat ./commit.diff |  ./showlinenum.awk show_header=0 path=1 | grep -e "\.[ch]:[0-9]*:+" -e "\.cpp:[0-9]*:+" -e "\.cc:[0-9]*:+" | cut -d+ -f1 | rev | cut -c2- | rev > ./targets
+
+/home/WAFLGo/instrument/bin/cbi --targets=targets xmllint.bc --stats=false
+cp ./targets_id.txt /home
+cp ./suffix.txt /home
+cp ./targets*.txt /home
+cp ./distance.txt /home
+cp ./branch-distance.txt /home
+cp ./branch-distance-min.txt /home
+cp ./branch-curloc.txt /home
+cp ./*_data.txt /home
+
+/home/WAFLGo/afl-clang-fast++ xmllint.ci.bc -L.. -l:libxml2.a -o xmllint.ci
+cp ./bbinfo-fast.txt /home/bbinfo-ci-bc.txt
+cp ./branch-distance-order.txt /home
+cp ./*-distance-order.txt /home
+cp ./*-order.txt /home
+```
+Start fuzzing
+```commandline
+/home/WAFLGo/afl-fuzz  -T waflgo-xmllint -t 1000+ -m none -z exp -c 45m -q 1 -i /home/xml -o /home/out -- /home/waflgo-xmllint/fuzz-walfgo/xmllint.ci  @@
+```
+
