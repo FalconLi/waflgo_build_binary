@@ -36,13 +36,13 @@ cd /home/waflgo-mujs; git checkout 8c27b12
 ```
 Build Binary
 ```commandline
-export CC=/home/WAFLGo/afl-clang-fast
-export CXX=/home/WAFLGo/afl-clang-fast++
+export ADD="-g --notI "
+export CC=/home/WAFLGo/afl-clang-fast CXX=/home/WAFLGo/afl-clang-fast++  CFLAGS="$ADD" CXXFLAGS="$ADD"
 export AFL_CC=gclang
 export AFL_CXX=gclang++
 
-make clean
-make CFLAGS="-g --notI" CXXFLAGS="-g --notI"
+cmake . 
+make clean;make
 unset AFL_CC AFL_CXX
 
 cp build/release/mujs ./
@@ -281,3 +281,68 @@ Start fuzzing
 /home/WAFLGo/afl-fuzz  -T waflgo-mujs -t 1000+ -m none -z exp -c 45m -q 1 -i /home/js -o /home/out -- /home/waflgo-mujs/fuzz/mujs.ci  @@
 ```
 
+### libxml2-issue-535
+Docker Container
+```commandline
+docker run -d --name waflgo-libxml2-535 waflgo_image tail -f /dev/null
+docker exec -it waflgo-libxml2-535 /bin/bash
+```
+Compile WAFLGo<br>
+Refer to the commands [here](https://github.com/NESA-Lab/WAFLGo/tree/master#how-to-test-with-waflgo)
+
+Copy Seeds to Required Dictionary
+```commandline
+git clone https://gitlab.gnome.org/GNOME/libxml2.git /home/waflgo-libxml2
+mkdir xml
+cp /home/libxml2/fuzz/static_seed/regexp/* /home/xml/
+cp /home/libxml2/fuzz/static_seed/uri/* /home/xml/
+```
+Download Subject
+```commandline
+cd /home/waflgo-libxml2; git checkout 9a82b94
+```
+Build Binary
+```commandline
+export CC=/home/WAFLGo/afl-clang-fast
+export CXX=/home/WAFLGo/afl-clang-fast++
+export AFL_CC=gclang
+export AFL_CXX=gclang++
+
+make clean
+make CFLAGS="-g --notI" CXXFLAGS="-g --notI" HAVE_READLINE=no
+unset AFL_CC AFL_CXX
+
+cp build/release/mujs ./
+get-bc mujs
+
+mkdir fuzz
+cd fuzz
+cp ../mujs.bc .
+
+echo $'' > $TMP_DIR/BBtargets.txt
+git diff HEAD^1 HEAD > ./commit.diff
+cp /home/showlinenum.awk ./
+sed -i -e 's/\r$//' showlinenum.awk
+chmod +x showlinenum.awk
+cat ./commit.diff |  ./showlinenum.awk show_header=0 path=1 | grep -e "\.[ch]:[0-9]*:+" -e "\.cpp:[0-9]*:+" -e "\.cc:[0-9]*:+" | cut -d+ -f1 | rev | cut -c2- | rev > ./targets
+
+/home/WAFLGo/instrument/bin/cbi --targets=targets mujs.bc --stats=false
+cp ./targets_id.txt /home
+cp ./suffix.txt /home
+cp ./targets*.txt /home
+cp ./distance.txt /home
+cp ./branch-distance.txt /home
+cp ./branch-distance-min.txt /home
+cp ./branch-curloc.txt /home
+cp ./*_data.txt /home
+
+/home/WAFLGo/afl-clang-fast++ mujs.ci.bc  -lstdc++  -o mujs.ci
+cp ./bbinfo-fast.txt /home/bbinfo-ci-bc.txt
+cp ./branch-distance-order.txt /home
+cp ./*-distance-order.txt /home
+cp ./*-order.txt /home
+```
+Start fuzzing
+```commandline
+/home/WAFLGo/afl-fuzz  -T waflgo-mujs -t 1000+ -m none -z exp -c 45m -q 1 -i /home/js -o /home/out -- /home/waflgo-mujs/fuzz/mujs.ci  @@
+```
