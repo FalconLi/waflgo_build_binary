@@ -293,7 +293,7 @@ Refer to the commands [here](https://github.com/NESA-Lab/WAFLGo/tree/master#how-
 Copy Seeds to Required Dictionary
 ```commandline
 git clone https://gitlab.gnome.org/GNOME/libxml2.git /home/waflgo-libxml2
-mkdir xml
+mkdir /home/xml
 cp /home/waflgo-libxml2/fuzz/static_seed/regexp/* /home/xml/
 cp /home/waflgo-libxml2/fuzz/static_seed/uri/* /home/xml/
 ```
