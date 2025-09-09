@@ -294,8 +294,8 @@ Copy Seeds to Required Dictionary
 ```commandline
 git clone https://gitlab.gnome.org/GNOME/libxml2.git /home/waflgo-libxml2
 mkdir xml
-cp /home/libxml2/fuzz/static_seed/regexp/* /home/xml/
-cp /home/libxml2/fuzz/static_seed/uri/* /home/xml/
+cp /home/waflgo-libxml2/fuzz/static_seed/regexp/* /home/xml/
+cp /home/waflgo-libxml2/fuzz/static_seed/uri/* /home/xml/
 ```
 Download Subject
 ```commandline
