@@ -343,7 +343,7 @@ cp ./*-order.txt /home
 ```
 Start fuzzing
 ```commandline
-/home/WAFLGo/afl-fuzz  -T waflgo-xmllint -t 1000+ -m none -z exp -c 45m -q 1 -i /home/xml -o /home/out -- /home/waflgo-xmllint/fuzz-walfgo/xmllint.ci  @@
+/home/WAFLGo/afl-fuzz  -T waflgo-libxml2 -t 1000+ -m none -z exp -c 45m -q 1 -i /home/xml -o /home/out -- /home/waflgo-libxml2/fuzz-walfgo/xmllint.ci  @@
 ```
 
 ### libxml2-issue-550
@@ -408,6 +408,6 @@ cp ./*-order.txt /home
 ```
 Start fuzzing
 ```commandline
-/home/WAFLGo/afl-fuzz  -T waflgo-xmllint -t 1000+ -m none -z exp -c 45m -q 1 -i /home/xml -o /home/out -- /home/waflgo-xmllint/fuzz-walfgo/xmllint.ci  @@
+/home/WAFLGo/afl-fuzz  -T waflgo-libxml2 -t 1000+ -m none -z exp -c 45m -q 1 -i /home/xml -o /home/out -- /home/waflgo-libxml2/fuzz-walfgo/xmllint.ci  @@
 ```
 
