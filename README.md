@@ -150,8 +150,8 @@ Start fuzzing
 ### mujs-issue-145
 Docker Container
 ```commandline
-docker run -d --name waflgo-mujs-141 waflgo_image tail -f /dev/null
-docker exec -it waflgo-mujs-141 /bin/bash
+docker run -d --name waflgo-mujs-145 waflgo_image tail -f /dev/null
+docker exec -it waflgo-mujs-145 /bin/bash
 ```
 Compile WAFLGo<br>
 Refer to the commands [here](https://github.com/NESA-Lab/WAFLGo/tree/master#how-to-test-with-waflgo)
