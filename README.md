@@ -343,6 +343,6 @@ cp ./*-order.txt /home
 ```
 Start fuzzing
 ```commandline
-/home/WAFLGo/afl-fuzz  -T waflgo-xmllint -t 1000+ -m none -z exp -c 45m -q 1 -i /home/xml -o /home/out -- /home/waflgo-xmllint/fuzzfuzz-walfgo/xmllint.ci  @@
+/home/WAFLGo/afl-fuzz  -T waflgo-xmllint -t 1000+ -m none -z exp -c 45m -q 1 -i /home/xml -o /home/out -- /home/waflgo-xmllint/fuzz-walfgo/xmllint.ci  @@
 ```
 
