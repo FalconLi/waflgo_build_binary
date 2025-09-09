@@ -36,13 +36,13 @@ cd /home/waflgo-mujs; git checkout 8c27b12
 ```
 Build Binary
 ```commandline
-export ADD="-g --notI "
-export CC=/home/WAFLGo/afl-clang-fast CXX=/home/WAFLGo/afl-clang-fast++  CFLAGS="$ADD" CXXFLAGS="$ADD"
+export CC=/home/WAFLGo/afl-clang-fast
+export CXX=/home/WAFLGo/afl-clang-fast++
 export AFL_CC=gclang
 export AFL_CXX=gclang++
 
-cmake . 
-make clean;make
+make clean
+make CFLAGS="-g --notI" CXXFLAGS="-g --notI"
 unset AFL_CC AFL_CXX
 
 cp build/release/mujs ./
@@ -303,13 +303,13 @@ cd /home/waflgo-libxml2; git checkout 9a82b94
 ```
 Build Binary
 ```commandline
-export CC=/home/WAFLGo/afl-clang-fast
-export CXX=/home/WAFLGo/afl-clang-fast++
+export ADD="-g --notI "
+export CC=/home/WAFLGo/afl-clang-fast CXX=/home/WAFLGo/afl-clang-fast++  CFLAGS="$ADD" CXXFLAGS="$ADD"
 export AFL_CC=gclang
 export AFL_CXX=gclang++
 
-make clean
-make CFLAGS="-g --notI" CXXFLAGS="-g --notI" HAVE_READLINE=no
+cmake . 
+make clean;make
 unset AFL_CC AFL_CXX
 
 cp build/release/mujs ./
