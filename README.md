@@ -308,16 +308,15 @@ export CC=/home/WAFLGo/afl-clang-fast CXX=/home/WAFLGo/afl-clang-fast++  CFLAGS=
 export AFL_CC=gclang
 export AFL_CXX=gclang++
 
-cmake . 
+ cmake -DLIBXML2_WITH_LZMA=OFF .
 make clean;make
 unset AFL_CC AFL_CXX
 
-cp build/release/mujs ./
-get-bc mujs
+get-bc xmllint
 
 mkdir fuzz
 cd fuzz
-cp ../mujs.bc .
+cp ../xmllint.bc .
 
 echo $'' > $TMP_DIR/BBtargets.txt
 git diff HEAD^1 HEAD > ./commit.diff
@@ -326,7 +325,7 @@ sed -i -e 's/\r$//' showlinenum.awk
 chmod +x showlinenum.awk
 cat ./commit.diff |  ./showlinenum.awk show_header=0 path=1 | grep -e "\.[ch]:[0-9]*:+" -e "\.cpp:[0-9]*:+" -e "\.cc:[0-9]*:+" | cut -d+ -f1 | rev | cut -c2- | rev > ./targets
 
-/home/WAFLGo/instrument/bin/cbi --targets=targets mujs.bc --stats=false
+/home/WAFLGo/instrument/bin/cbi --targets=targets xmllint.bc --stats=false
 cp ./targets_id.txt /home
 cp ./suffix.txt /home
 cp ./targets*.txt /home
@@ -336,7 +335,7 @@ cp ./branch-distance-min.txt /home
 cp ./branch-curloc.txt /home
 cp ./*_data.txt /home
 
-/home/WAFLGo/afl-clang-fast++ mujs.ci.bc  -lstdc++  -o mujs.ci
+/home/WAFLGo/afl-clang-fast++ xmllint.ci.bc  -lstdc++  -o xmllint.ci
 cp ./bbinfo-fast.txt /home/bbinfo-ci-bc.txt
 cp ./branch-distance-order.txt /home
 cp ./*-distance-order.txt /home
@@ -344,5 +343,6 @@ cp ./*-order.txt /home
 ```
 Start fuzzing
 ```commandline
-/home/WAFLGo/afl-fuzz  -T waflgo-mujs -t 1000+ -m none -z exp -c 45m -q 1 -i /home/js -o /home/out -- /home/waflgo-mujs/fuzz/mujs.ci  @@
+/home/WAFLGo/afl-fuzz  -T waflgo-xmllint -t 1000+ -m none -z exp -c 45m -q 1 -i /home/xml -o /home/out -- /home/waflgo-xmllint/fuzz/xmllint.ci  @@
 ```
+
