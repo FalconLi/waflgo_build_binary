@@ -290,28 +290,30 @@ docker exec -it waflgo-libxml2-535 /bin/bash
 Compile WAFLGo<br>
 Refer to the commands [here](https://github.com/NESA-Lab/WAFLGo/tree/master#how-to-test-with-waflgo)
 
-Copy Seeds to Required Dictionary
+Download Subject + Copy Seeds to Required Dictionary + Build Binary
 ```commandline
 git clone https://gitlab.gnome.org/GNOME/libxml2.git /home/waflgo-libxml2
-mkdir /home/xml
-cp /home/waflgo-libxml2/fuzz/static_seed/regexp/* /home/xml/
-cp /home/waflgo-libxml2/fuzz/static_seed/uri/* /home/xml/
-```
-Download Subject
-```commandline
 cd /home/waflgo-libxml2; git checkout 9a82b94
-```
-Build Binary
-```commandline
-export ADD="-g --notI "
-export CC=/home/WAFLGo/afl-clang-fast CXX=/home/WAFLGo/afl-clang-fast++  CFLAGS="$ADD" CXXFLAGS="$ADD"
-export AFL_CC=gclang
-export AFL_CXX=gclang++
 
-cmake -DLIBXML2_WITH_LZMA=OFF -DBUILD_SHARED_LIBS=OFF .
-make clean; make
+export ADD="-g --notI"
+export CC=/home/WAFLGo/afl-clang-fast 
+export CXX=/home/WAFLGo/afl-clang-fast++
+export CFLAGS="$ADD" 
+export CXXFLAGS="$ADD"
+export AFL_CC=gclang 
+export AFL_CXX=gclang++
+./autogen.sh --enable-static --disable-shared --without-python --without-readline LDFLAGS="-static"
+
+make clean;make
 unset AFL_CC AFL_CXX
 
+cd fuzz
+make corpus
+
+mkdir /home/xml
+cp /home/waflgo-libxml2/fuzz/seed/xml/* /home/xml/
+
+cd /home/waflgo-libxml2
 get-bc xmllint
 
 mkdir fuzz-walfgo
