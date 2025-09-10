@@ -376,6 +376,7 @@ cd "automake-${AUTOMAKE_VERSION}"
 make
 make install
 
+cd /home/waflgo-libxml2
 export ADD="-g --notI"
 export CC=/home/WAFLGo/afl-clang-fast 
 export CXX=/home/WAFLGo/afl-clang-fast++
