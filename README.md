@@ -24,10 +24,9 @@ Refer to the commands [here](https://github.com/NESA-Lab/WAFLGo/tree/master#how-
 
 Copy Seeds to Required Dictionary
 ```commandline
-cd /home
-git clone https://github.com/unifuzz/seeds.git
-mkdir js
-cp /home/seeds/general_evaluation/mujs/* /home/js/
+mkdir /home/js
+git clone https://github.com/FalconLi/waflgo_build_binary.git /home/waflgo_build_binary
+cp /home/waflgo_build_binary/seeds/js/* /home/js/
 ```
 Download Subject
 ```commandline
@@ -91,10 +90,9 @@ Refer to the commands [here](https://github.com/NESA-Lab/WAFLGo/tree/master#how-
 
 Copy Seeds to Required Dictionary
 ```commandline
-cd /home
-git clone https://github.com/unifuzz/seeds.git
-mkdir js
-cp /home/seeds/general_evaluation/mujs/* /home/js/
+mkdir /home/js
+git clone https://github.com/FalconLi/waflgo_build_binary.git /home/waflgo_build_binary
+cp /home/waflgo_build_binary/seeds/js/* /home/js/
 ```
 Download Subject
 ```commandline
@@ -158,10 +156,9 @@ Refer to the commands [here](https://github.com/NESA-Lab/WAFLGo/tree/master#how-
 
 Copy Seeds to Required Dictionary
 ```commandline
-cd /home
-git clone https://github.com/unifuzz/seeds.git
-mkdir js
-cp /home/seeds/general_evaluation/mujs/* /home/js/
+mkdir /home/js
+git clone https://github.com/FalconLi/waflgo_build_binary.git /home/waflgo_build_binary
+cp /home/waflgo_build_binary/seeds/js/* /home/js/
 ```
 Download Subject
 ```commandline
@@ -225,10 +222,9 @@ Refer to the commands [here](https://github.com/NESA-Lab/WAFLGo/tree/master#how-
 
 Copy Seeds to Required Dictionary
 ```commandline
-cd /home
-git clone https://github.com/unifuzz/seeds.git
-mkdir js
-cp /home/seeds/general_evaluation/mujs/* /home/js/
+mkdir /home/js
+git clone https://github.com/FalconLi/waflgo_build_binary.git /home/waflgo_build_binary
+cp /home/waflgo_build_binary/seeds/js/* /home/js/
 ```
 Download Subject
 ```commandline
