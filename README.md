@@ -357,28 +357,42 @@ docker exec -it waflgo-libxml2-550 /bin/bash
 Compile WAFLGo<br>
 Refer to the commands [here](https://github.com/NESA-Lab/WAFLGo/tree/master#how-to-test-with-waflgo)
 
-Copy Seeds to Required Dictionary
+Download Subject + Copy Seeds to Required Dictionary + Build Binary
 ```commandline
+cd /home
+AUTOMAKE_VERSION=1.16.3
+wget "https://ftp.gnu.org/gnu/automake/automake-${AUTOMAKE_VERSION}.tar.gz"
+tar -xzf "automake-${AUTOMAKE_VERSION}.tar.gz"
+cd "automake-${AUTOMAKE_VERSION}"
+./configure
+make
+make install
+
 git clone https://gitlab.gnome.org/GNOME/libxml2.git /home/waflgo-libxml2
-mkdir /home/xml
-cp /home/waflgo-libxml2/fuzz/static_seed/regexp/* /home/xml/
-cp /home/waflgo-libxml2/fuzz/static_seed/uri/* /home/xml/
-```
-Download Subject
-```commandline
 cd /home/waflgo-libxml2; git checkout 7e3f469
-```
-Build Binary
-```commandline
-export ADD="-g --notI "
-export CC=/home/WAFLGo/afl-clang-fast CXX=/home/WAFLGo/afl-clang-fast++  CFLAGS="$ADD" CXXFLAGS="$ADD"
-export AFL_CC=gclang
+
+export ADD="-g --notI"
+export CC=/home/WAFLGo/afl-clang-fast 
+export CXX=/home/WAFLGo/afl-clang-fast++
+export CFLAGS="$ADD" 
+export CXXFLAGS="$ADD"
+export AFL_CC=gclang 
 export AFL_CXX=gclang++
 
-cmake -DLIBXML2_WITH_LZMA=OFF -DBUILD_SHARED_LIBS=OFF .
-make clean; make
+export ACLOCAL_PATH="/usr/share/aclocal:/usr/local/share/aclocal"
+echo 'export ACLOCAL_PATH="/usr/share/aclocal:/usr/local/share/aclocal"' >> ~/.bashrc
+./autogen.sh --enable-static --disable-shared --without-python --without-readline LDFLAGS="-static"
+
+make clean;make
 unset AFL_CC AFL_CXX
 
+cd fuzz
+make corpus
+
+mkdir /home/xml
+cp /home/waflgo-libxml2/fuzz/seed/xml/* /home/xml/
+
+cd /home/waflgo-libxml2
 get-bc xmllint
 
 mkdir fuzz-walfgo
