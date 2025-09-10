@@ -4,7 +4,7 @@ It contains the commands to build the binaries for all the commits evaluated in 
 The [Github repository](https://github.com/NESA-Lab/WAFLGo) of the paper only provides command to build the binary of libjpeg-issue-493. This directory will provide commands to build binaries of all the commits evaluated in the paper.
 
 ## Docker
-The Docker image provided by the authors have a serious bug inside. You cannot pull this image if you are using rootless Docker, which restricts the running of the program on remote servers.
+The [Docker image](https://hub.docker.com/r/he1lonice/waflgo) provided by the authors have a serious bug inside. You cannot pull this image if you are using rootless Docker, which restricts the running of the program on remote servers.
 A Dockerfile is provided to build an image with the bug solved
 Use the following command in the directory where Dockerfile is present to build the image:
 ```commandline
