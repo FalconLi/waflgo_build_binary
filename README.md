@@ -290,11 +290,19 @@ docker exec -it waflgo-libxml2-535 /bin/bash
 Compile WAFLGo<br>
 Refer to the commands [here](https://github.com/NESA-Lab/WAFLGo/tree/master#how-to-test-with-waflgo)
 
-Download Subject + Copy Seeds to Required Dictionary + Build Binary
+Copy Seeds to Required Dictionary
+```
+mkdir /home/xml
+git clone https://github.com/FalconLi/waflgo_build_binary.git /home/waflgo_build_binary
+cp /home/waflgo_build_binary/seeds/xml/* /home/xml/
+```
+Download Subject
 ```commandline
 git clone https://gitlab.gnome.org/GNOME/libxml2.git /home/waflgo-libxml2
 cd /home/waflgo-libxml2; git checkout 9a82b94
-
+```
+Build Binary
+```commandline
 export ADD="-g --notI"
 export CC=/home/WAFLGo/afl-clang-fast 
 export CXX=/home/WAFLGo/afl-clang-fast++
@@ -307,13 +315,6 @@ export AFL_CXX=gclang++
 make clean;make
 unset AFL_CC AFL_CXX
 
-cd fuzz
-make corpus
-
-mkdir /home/xml
-cp /home/waflgo-libxml2/fuzz/seed/xml/* /home/xml/
-
-cd /home/waflgo-libxml2
 get-bc xmllint
 
 mkdir fuzz-walfgo
@@ -357,7 +358,18 @@ docker exec -it waflgo-libxml2-550 /bin/bash
 Compile WAFLGo<br>
 Refer to the commands [here](https://github.com/NESA-Lab/WAFLGo/tree/master#how-to-test-with-waflgo)
 
-Download Subject + Copy Seeds to Required Dictionary + Build Binary
+Copy Seeds to Required Dictionary
+```
+mkdir /home/xml
+git clone https://github.com/FalconLi/waflgo_build_binary.git /home/waflgo_build_binary
+cp /home/waflgo_build_binary/seeds/xml/* /home/xml/
+```
+Download Subject
+```commandline
+git clone https://gitlab.gnome.org/GNOME/libxml2.git /home/waflgo-libxml2
+cd /home/waflgo-libxml2; git checkout 7e3f469
+```
+Build Binary
 ```commandline
 cd /home
 AUTOMAKE_VERSION=1.16.3
@@ -367,9 +379,6 @@ cd "automake-${AUTOMAKE_VERSION}"
 ./configure
 make
 make install
-
-git clone https://gitlab.gnome.org/GNOME/libxml2.git /home/waflgo-libxml2
-cd /home/waflgo-libxml2; git checkout 7e3f469
 
 export ADD="-g --notI"
 export CC=/home/WAFLGo/afl-clang-fast 
@@ -385,14 +394,6 @@ echo 'export ACLOCAL_PATH="/usr/share/aclocal:/usr/local/share/aclocal"' >> ~/.b
 
 make clean;make
 unset AFL_CC AFL_CXX
-
-cd fuzz
-make corpus
-
-mkdir /home/xml
-cp /home/waflgo-libxml2/fuzz/seed/xml/* /home/xml/
-
-cd /home/waflgo-libxml2
 get-bc xmllint
 
 mkdir fuzz-walfgo
