@@ -496,7 +496,7 @@ Download Subject
 ```commandline
 git clone https://github.com/libjpeg-turbo/libjpeg-turbo.git /home/waflgo-libjpeg
 cd /home/waflgo-libjpeg; git checkout 88ae609
-···
+```
 Build Binary
 ```commandline
 export ADD="-g --notI "
