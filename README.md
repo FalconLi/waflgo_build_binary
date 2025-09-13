@@ -541,7 +541,6 @@ Start fuzzing
 /home/WAFLGo/afl-fuzz  -T waflgo-libjpeg -t 1000+ -m none -z exp -c 45m -q 1 -i /home/jpg -o /home/out -- /home/waflgo-libjpeg/fuzz/jpegtran-static.ci  @@
 ```
 
-
 ### libtiff-issue-488
 Docker Container
 ```commandline
@@ -550,7 +549,12 @@ docker exec -it waflgo-libtiff-488 /bin/bash
 ```
 Compile WAFLGo<br>
 Refer to the commands [here](https://github.com/NESA-Lab/WAFLGo/tree/master#how-to-test-with-waflgo)
-
+Copy Seeds to Required Dictionary
+```
+mkdir /home/tiff
+git clone https://github.com/FalconLi/waflgo_build_binary.git /home/waflgo_build_binary
+cp /home/waflgo_build_binary/seeds/tiff/* /home/tiff/
+```
 Download Subject
 ```commandline
 git clone https://gitlab.com/libtiff/libtiff.git /home/waflgo-libtiff
@@ -558,10 +562,6 @@ cd /home/waflgo-libtiff; git checkout 7057734d
 ```
 Build Binary
 ```commandline
-export ADD="-g --notI "
-export CC=/home/WAFLGo/afl-clang-fast CXX=/home/WAFLGo/afl-clang-fast++  CFLAGS="$ADD" CXXFLAGS="$ADD"
-export AFL_CC=gclang AFL_CXX=gclang++
-
 export ADD="-g --notI"
 export CC=/home/WAFLGo/afl-clang-fast 
 export CXX=/home/WAFLGo/afl-clang-fast++
