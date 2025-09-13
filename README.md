@@ -562,15 +562,24 @@ export ADD="-g --notI "
 export CC=/home/WAFLGo/afl-clang-fast CXX=/home/WAFLGo/afl-clang-fast++  CFLAGS="$ADD" CXXFLAGS="$ADD"
 export AFL_CC=gclang AFL_CXX=gclang++
 
-cmake . 
-make clean;make -j $(nproc) 
+export ADD="-g --notI"
+export CC=/home/WAFLGo/afl-clang-fast 
+export CXX=/home/WAFLGo/afl-clang-fast++
+export CFLAGS="$ADD" 
+export CXXFLAGS="$ADD"
+export AFL_CC=gclang 
+export AFL_CXX=gclang++
+./autogen.sh --enable-static --disable-shared --without-python --without-readline LDFLAGS="-static"
+./configure --enable-static --disable-shared --without-python --without-readline LDFLAGS="-static"
+
+make clean;make 
 unset AFL_CC AFL_CXX
 
-cp ./jpegtran-static ./
-get-bc jpegtran-static
+cp ./tools/tiffcrop ./
+get-bc tiffcrop
 
 mkdir fuzz; cd fuzz
-cp ../jpegtran-static.bc .
+cp ../tiffcrop.bc .
 
 echo $'' > $TMP_DIR/BBtargets.txt
 git diff HEAD^1 HEAD > ./commit.diff
@@ -579,7 +588,7 @@ sed -i -e 's/\r$//' showlinenum.awk
 chmod +x showlinenum.awk
 cat ./commit.diff |  ./showlinenum.awk show_header=0 path=1 | grep -e "\.[ch]:[0-9]*:+" -e "\.cpp:[0-9]*:+" -e "\.cc:[0-9]*:+" | cut -d+ -f1 | rev | cut -c2- | rev > ./targets
 
-/home/WAFLGo/instrument/bin/cbi --targets=targets jpegtran-static.bc --stats=false
+/home/WAFLGo/instrument/bin/cbi --targets=targets tiffcrop.bc --stats=false
 cp ./targets_id.txt /home
 cp ./suffix.txt /home
 cp ./targets*.txt /home
@@ -589,7 +598,7 @@ cp ./branch-distance-min.txt /home
 cp ./branch-curloc.txt /home
 cp ./*_data.txt /home
 
-/home/WAFLGo/afl-clang-fast++ jpegtran-static.ci.bc  -lstdc++  -o jpegtran-static.ci
+/home/WAFLGo/afl-clang-fast++ tiffcrop.ci.bc  -lstdc++ -lz -o tiffcrop.ci
 cp ./bbinfo-fast.txt /home/bbinfo-ci-bc.txt
 cp ./branch-distance-order.txt /home
 cp ./*-distance-order.txt /home
@@ -599,3 +608,4 @@ Start fuzzing
 ```commandline
 /home/WAFLGo/afl-fuzz  -T waflgo-libtiff -t 1000+ -m none -z exp -c 45m -q 1 -i /home/tiff -o /home/out -- /home/waflgo-libtiff/fuzz/jpegtran-static.ci  @@
 ```
+
