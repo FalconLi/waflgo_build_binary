@@ -578,8 +578,8 @@ unset AFL_CC AFL_CXX
 cp ./tools/tiffcrop ./
 get-bc tiffcrop
 
-mkdir fuzz; cd fuzz
-cp ../tiffcrop.bc .
+mkdir libtiff/fuzz; cd libtiff/fuzz
+cp ../../tiffcrop.bc .
 
 echo $'' > $TMP_DIR/BBtargets.txt
 git diff HEAD^1 HEAD > ./commit.diff
