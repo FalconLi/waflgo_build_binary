@@ -540,3 +540,72 @@ Start fuzzing
 ```commandline
 /home/WAFLGo/afl-fuzz  -T waflgo-libjpeg -t 1000+ -m none -z exp -c 45m -q 1 -i /home/jpg -o /home/out -- /home/waflgo-libjpeg/fuzz/jpegtran-static.ci  @@
 ```
+
+
+### libtiff-issue-488
+Docker Container
+```commandline
+docker run -d --name waflgo-libtiff-488 waflgo_image tail -f /dev/null
+docker exec -it waflgo-libtiff-488 /bin/bash
+```
+Compile WAFLGo<br>
+Refer to the commands [here](https://github.com/NESA-Lab/WAFLGo/tree/master#how-to-test-with-waflgo)
+
+Download Subject
+```commandline
+git clone https://gitlab.com/libtiff/libtiff.git /home/waflgo-libtiff
+cd /home/waflgo-libtiff; git checkout 7057734d
+```
+Build Binary
+```commandline
+export ADD="-g --notI "
+export CC=/home/WAFLGo/afl-clang-fast CXX=/home/WAFLGo/afl-clang-fast++  CFLAGS="$ADD" CXXFLAGS="$ADD"
+export AFL_CC=gclang AFL_CXX=gclang++
+
+export ADD="-g --notI"
+export CC=/home/WAFLGo/afl-clang-fast 
+export CXX=/home/WAFLGo/afl-clang-fast++
+export CFLAGS="$ADD" 
+export CXXFLAGS="$ADD"
+export AFL_CC=gclang 
+export AFL_CXX=gclang++
+./autogen.sh --enable-static --disable-shared --without-python --without-readline LDFLAGS="-static"
+./configure --enable-static --disable-shared --without-python --without-readline LDFLAGS="-static"
+
+make clean;make 
+unset AFL_CC AFL_CXX
+
+cp ./tools/tiffcrop ./
+get-bc tiffcrop
+
+mkdir fuzz; cd fuzz
+cp ../tiffcrop.bc .
+
+echo $'' > $TMP_DIR/BBtargets.txt
+git diff HEAD^1 HEAD > ./commit.diff
+cp /home/showlinenum.awk ./
+sed -i -e 's/\r$//' showlinenum.awk
+chmod +x showlinenum.awk
+cat ./commit.diff |  ./showlinenum.awk show_header=0 path=1 | grep -e "\.[ch]:[0-9]*:+" -e "\.cpp:[0-9]*:+" -e "\.cc:[0-9]*:+" | cut -d+ -f1 | rev | cut -c2- | rev > ./targets
+
+/home/WAFLGo/instrument/bin/cbi --targets=targets tiffcrop.bc --stats=false
+cp ./targets_id.txt /home
+cp ./suffix.txt /home
+cp ./targets*.txt /home
+cp ./distance.txt /home
+cp ./branch-distance.txt /home
+cp ./branch-distance-min.txt /home
+cp ./branch-curloc.txt /home
+cp ./*_data.txt /home
+
+/home/WAFLGo/afl-clang-fast++ tiffcrop.ci.bc  -lstdc++ -lz -o tiffcrop.ci
+cp ./bbinfo-fast.txt /home/bbinfo-ci-bc.txt
+cp ./branch-distance-order.txt /home
+cp ./*-distance-order.txt /home
+cp ./*-order.txt /home
+```
+Start fuzzing
+```commandline
+/home/WAFLGo/afl-fuzz  -T waflgo-libtiff -t 1000+ -m none -z exp -c 45m -q 1 -i /home/tiff -o /home/out -- /home/waflgo-libtiff/fuzz/jpegtran-static.ci  @@
+```
+
