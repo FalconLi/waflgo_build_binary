@@ -569,24 +569,24 @@ export CFLAGS="$ADD"
 export CXXFLAGS="$ADD"
 export AFL_CC=gclang 
 export AFL_CXX=gclang++
-./autogen.sh --enable-static --disable-shared --without-python --without-readline LDFLAGS="-static"
+./autogen.sh
 ./configure --enable-static --disable-shared --without-python --without-readline LDFLAGS="-static"
 
 make clean;make 
 unset AFL_CC AFL_CXX
 
-cp ./tools/tiffcrop ./
+cp tools/tiffcrop ./
 get-bc tiffcrop
 
-mkdir libtiff/fuzz; cd libtiff/fuzz
-cp ../../tiffcrop.bc .
+mkdir fuzz; cd fuzz
+cp ../tiffcrop.bc .
 
 echo $'' > $TMP_DIR/BBtargets.txt
 git diff HEAD^1 HEAD > ./commit.diff
 cp /home/showlinenum.awk ./
 sed -i -e 's/\r$//' showlinenum.awk
 chmod +x showlinenum.awk
-cat ./commit.diff |  ./showlinenum.awk show_header=0 path=1 | grep -e "\.[ch]:[0-9]*:+" -e "\.cpp:[0-9]*:+" -e "\.cc:[0-9]*:+" | cut -d+ -f1 | rev | cut -c2- | rev > ./targets
+cat ./commit.diff |  ./showlinenum.awk show_header=0 path=1 | grep -e "\.[ch]:[0-9]*:+" -e "\.cpp:[0-9]*:+" -e "\.cc:[0-9]*:+" | cut -d+ -f1 | rev | cut -c2- | rev | awk -F: '{n=split($1,a,"/"); print a[n]":"$2}' > ./targets
 
 /home/WAFLGo/instrument/bin/cbi --targets=targets tiffcrop.bc --stats=false
 cp ./targets_id.txt /home
@@ -606,7 +606,7 @@ cp ./*-order.txt /home
 ```
 Start fuzzing
 ```commandline
-/home/WAFLGo/afl-fuzz  -T waflgo-libtiff -t 1000+ -m none -z exp -c 45m -q 1 -i /home/tiff -o /home/out -- /home/waflgo-libtiff/fuzz/tiffcrop.ci  @@
+/home/WAFLGo/afl-fuzz  -T waflgo-libtiff -t 1000+ -m none -z exp -c 45m -q 1 -i /home/tiff -o /home/out -- /home/waflgo-libtiff/fuzz/tiffcrop.ci  @@ /dev/null
 ```
 
 ### libtiff-issue-498
@@ -637,24 +637,24 @@ export CFLAGS="$ADD"
 export CXXFLAGS="$ADD"
 export AFL_CC=gclang 
 export AFL_CXX=gclang++
-./autogen.sh --enable-static --disable-shared --without-python --without-readline LDFLAGS="-static"
+./autogen.sh
 ./configure --enable-static --disable-shared --without-python --without-readline LDFLAGS="-static"
 
 make clean;make 
 unset AFL_CC AFL_CXX
 
-cp ./tools/tiffcrop ./
+cp tools/tiffcrop ./
 get-bc tiffcrop
 
-mkdir libtiff/fuzz; cd libtiff/fuzz
-cp ../../tiffcrop.bc .
+mkdir fuzz; cd fuzz
+cp ../tiffcrop.bc .
 
 echo $'' > $TMP_DIR/BBtargets.txt
 git diff HEAD^1 HEAD > ./commit.diff
 cp /home/showlinenum.awk ./
 sed -i -e 's/\r$//' showlinenum.awk
 chmod +x showlinenum.awk
-cat ./commit.diff |  ./showlinenum.awk show_header=0 path=1 | grep -e "\.[ch]:[0-9]*:+" -e "\.cpp:[0-9]*:+" -e "\.cc:[0-9]*:+" | cut -d+ -f1 | rev | cut -c2- | rev > ./targets
+cat ./commit.diff |  ./showlinenum.awk show_header=0 path=1 | grep -e "\.[ch]:[0-9]*:+" -e "\.cpp:[0-9]*:+" -e "\.cc:[0-9]*:+" | cut -d+ -f1 | rev | cut -c2- | rev | awk -F: '{n=split($1,a,"/"); print a[n]":"$2}' > ./targets
 
 /home/WAFLGo/instrument/bin/cbi --targets=targets tiffcrop.bc --stats=false
 cp ./targets_id.txt /home
@@ -674,6 +674,6 @@ cp ./*-order.txt /home
 ```
 Start fuzzing
 ```commandline
-/home/WAFLGo/afl-fuzz  -T waflgo-libtiff -t 1000+ -m none -z exp -c 45m -q 1 -i /home/tiff -o /home/out -- /home/waflgo-libtiff/fuzz/tiffcrop.ci  @@
+/home/WAFLGo/afl-fuzz  -T waflgo-libtiff -t 1000+ -m none -z exp -c 45m -q 1 -i /home/tiff -o /home/out -- /home/waflgo-libtiff/fuzz/tiffcrop.ci  @@ /dev/null
 ```
 
