@@ -983,11 +983,11 @@ export AFL_CXX=gclang++
 make clean;make 
 unset AFL_CC AFL_CXX
 
-cp tools/tiffcrop ./
-get-bc tiffcrop
+cp tools/tiffcp ./
+get-bc tiffcp
 
 mkdir fuzz; cd fuzz
-cp ../tiffcrop.bc .
+cp ../tiffcp.bc .
 
 echo $'' > $TMP_DIR/BBtargets.txt
 git diff HEAD^1 HEAD > ./commit.diff
@@ -996,7 +996,7 @@ sed -i -e 's/\r$//' showlinenum.awk
 chmod +x showlinenum.awk
 cat ./commit.diff |  ./showlinenum.awk show_header=0 path=1 | grep -e "\.[ch]:[0-9]*:+" -e "\.cpp:[0-9]*:+" -e "\.cc:[0-9]*:+" | cut -d+ -f1 | rev | cut -c2- | rev | awk -F: '{n=split($1,a,"/"); print a[n]":"$2}' > ./targets
 
-/home/WAFLGo/instrument/bin/cbi --targets=targets tiffcrop.bc --stats=false
+/home/WAFLGo/instrument/bin/cbi --targets=targets tiffcp.bc --stats=false
 cp ./targets_id.txt /home
 cp ./suffix.txt /home
 cp ./targets*.txt /home
@@ -1006,7 +1006,7 @@ cp ./branch-distance-min.txt /home
 cp ./branch-curloc.txt /home
 cp ./*_data.txt /home
 
-/home/WAFLGo/afl-clang-fast++ tiffcrop.ci.bc  -lstdc++ -lz -o tiffcrop.ci
+/home/WAFLGo/afl-clang-fast++ tiffcp.ci.bc  -lstdc++ -lz -o tiffcp.ci
 cp ./bbinfo-fast.txt /home/bbinfo-ci-bc.txt
 cp ./branch-distance-order.txt /home
 cp ./*-distance-order.txt /home
@@ -1014,7 +1014,7 @@ cp ./*-order.txt /home
 ```
 Start fuzzing
 ```commandline
-/home/WAFLGo/afl-fuzz  -T waflgo-libtiff -t 1000+ -m none -z exp -c 45m -q 1 -i /home/tiff -o /home/out -- /home/waflgo-libtiff/fuzz/tiffcrop.ci  @@
+/home/WAFLGo/afl-fuzz  -T waflgo-libtiff -t 1000+ -m none -z exp -c 45m -q 1 -i /home/tiff -o /home/out -- /home/waflgo-libtiff/fuzz/tiffcp.ci  @@
 ```
 
 ### libtiff-issue-559
@@ -1051,11 +1051,11 @@ export AFL_CXX=gclang++
 make clean;make 
 unset AFL_CC AFL_CXX
 
-cp tools/tiffcrop ./
-get-bc tiffcrop
+cp tools/tiffinfo ./
+get-bc tiffinfo
 
 mkdir fuzz; cd fuzz
-cp ../tiffcrop.bc .
+cp ../tiffinfo.bc .
 
 echo $'' > $TMP_DIR/BBtargets.txt
 git diff HEAD^1 HEAD > ./commit.diff
@@ -1064,7 +1064,7 @@ sed -i -e 's/\r$//' showlinenum.awk
 chmod +x showlinenum.awk
 cat ./commit.diff |  ./showlinenum.awk show_header=0 path=1 | grep -e "\.[ch]:[0-9]*:+" -e "\.cpp:[0-9]*:+" -e "\.cc:[0-9]*:+" | cut -d+ -f1 | rev | cut -c2- | rev | awk -F: '{n=split($1,a,"/"); print a[n]":"$2}' > ./targets
 
-/home/WAFLGo/instrument/bin/cbi --targets=targets tiffcrop.bc --stats=false
+/home/WAFLGo/instrument/bin/cbi --targets=targets tiffinfo.bc --stats=false
 cp ./targets_id.txt /home
 cp ./suffix.txt /home
 cp ./targets*.txt /home
@@ -1074,7 +1074,7 @@ cp ./branch-distance-min.txt /home
 cp ./branch-curloc.txt /home
 cp ./*_data.txt /home
 
-/home/WAFLGo/afl-clang-fast++ tiffcrop.ci.bc  -lstdc++ -lz -o tiffcrop.ci
+/home/WAFLGo/afl-clang-fast++ tiffinfo.ci.bc  -lstdc++ -lz -o tiffinfo.ci
 cp ./bbinfo-fast.txt /home/bbinfo-ci-bc.txt
 cp ./branch-distance-order.txt /home
 cp ./*-distance-order.txt /home
@@ -1082,6 +1082,6 @@ cp ./*-order.txt /home
 ```
 Start fuzzing
 ```commandline
-/home/WAFLGo/afl-fuzz  -T waflgo-libtiff -t 1000+ -m none -z exp -c 45m -q 1 -i /home/tiff -o /home/out -- /home/waflgo-libtiff/fuzz/tiffcrop.ci  @@
+/home/WAFLGo/afl-fuzz  -T waflgo-libtiff -t 1000+ -m none -z exp -c 45m -q 1 -i /home/tiff -o /home/out -- /home/waflgo-libtiff/fuzz/tiffinfo.ci  @@
 ```
 
