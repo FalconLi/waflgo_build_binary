@@ -438,7 +438,7 @@ Download Subject
 ```commandline
 git clone https://github.com/libjpeg-turbo/libjpeg-turbo.git /home/waflgo-libjpeg
 cd /home/waflgo-libjpeg; git checkout 88ae609
-···
+```
 Build Binary
 ```commandline
 export ADD="-g --notI "
@@ -549,6 +549,7 @@ docker exec -it waflgo-libtiff-488 /bin/bash
 ```
 Compile WAFLGo<br>
 Refer to the commands [here](https://github.com/NESA-Lab/WAFLGo/tree/master#how-to-test-with-waflgo)
+
 Copy Seeds to Required Dictionary
 ```
 mkdir /home/tiff
@@ -617,6 +618,7 @@ docker exec -it waflgo-libtiff-498 /bin/bash
 ```
 Compile WAFLGo<br>
 Refer to the commands [here](https://github.com/NESA-Lab/WAFLGo/tree/master#how-to-test-with-waflgo)
+
 Copy Seeds to Required Dictionary
 ```
 mkdir /home/tiff
@@ -685,6 +687,7 @@ docker exec -it waflgo-libtiff-519 /bin/bash
 ```
 Compile WAFLGo<br>
 Refer to the commands [here](https://github.com/NESA-Lab/WAFLGo/tree/master#how-to-test-with-waflgo)
+
 Copy Seeds to Required Dictionary
 ```
 mkdir /home/tiff
@@ -753,6 +756,7 @@ docker exec -it waflgo-libtiff-520 /bin/bash
 ```
 Compile WAFLGo<br>
 Refer to the commands [here](https://github.com/NESA-Lab/WAFLGo/tree/master#how-to-test-with-waflgo)
+
 Copy Seeds to Required Dictionary
 ```
 mkdir /home/tiff
@@ -821,6 +825,7 @@ docker exec -it waflgo-libtiff-527 /bin/bash
 ```
 Compile WAFLGo<br>
 Refer to the commands [here](https://github.com/NESA-Lab/WAFLGo/tree/master#how-to-test-with-waflgo)
+
 Copy Seeds to Required Dictionary
 ```
 mkdir /home/tiff
@@ -889,6 +894,7 @@ docker exec -it waflgo-libtiff-530 /bin/bash
 ```
 Compile WAFLGo<br>
 Refer to the commands [here](https://github.com/NESA-Lab/WAFLGo/tree/master#how-to-test-with-waflgo)
+
 Copy Seeds to Required Dictionary
 ```
 mkdir /home/tiff
@@ -957,6 +963,7 @@ docker exec -it waflgo-libtiff-548 /bin/bash
 ```
 Compile WAFLGo<br>
 Refer to the commands [here](https://github.com/NESA-Lab/WAFLGo/tree/master#how-to-test-with-waflgo)
+
 Copy Seeds to Required Dictionary
 ```
 mkdir /home/tiff
@@ -1025,6 +1032,7 @@ docker exec -it waflgo-libtiff-559 /bin/bash
 ```
 Compile WAFLGo<br>
 Refer to the commands [here](https://github.com/NESA-Lab/WAFLGo/tree/master#how-to-test-with-waflgo)
+
 Copy Seeds to Required Dictionary
 ```
 mkdir /home/tiff
@@ -1083,5 +1091,261 @@ cp ./*-order.txt /home
 Start fuzzing
 ```commandline
 /home/WAFLGo/afl-fuzz  -T waflgo-libtiff -t 1000+ -m none -z exp -c 45m -q 1 -i /home/tiff -o /home/out -- /home/waflgo-libtiff/fuzz/tiffinfo.ci  @@
+```
+
+### bento4-issue-652
+Docker Container
+```commandline
+docker run -d --name waflgo-bento4-652 waflgo_image tail -f /dev/null
+docker exec -it waflgo-bento4-652 /bin/bash
+```
+Compile WAFLGo<br>
+Refer to the commands [here](https://github.com/NESA-Lab/WAFLGo/tree/master#how-to-test-with-waflgo)
+
+Copy Seeds to Required Dictionary
+```
+mkdir /home/mp4
+git clone https://github.com/FalconLi/waflgo_build_binary.git /home/waflgo_build_binary
+cp /home/waflgo_build_binary/seeds/mp4/* /home/mp4/
+```
+Download Subject
+```commandline
+git clone https://github.com/axiomatic-systems/Bento4.git /home/waflgo-bento4
+cd /home/waflgo-bento4; git checkout c9f2c53
+```
+Build Binary
+```commandline
+export ADD="-g --notI "
+export CC=/home/WAFLGo/afl-clang-fast CXX=/home/WAFLGo/afl-clang-fast++  CFLAGS="$ADD" CXXFLAGS="$ADD"
+export AFL_CC=gclang AFL_CXX=gclang++
+
+cmake . 
+make clean;make
+unset AFL_CC AFL_CXX
+
+cp ./mp4info ./
+get-bc mp4info 
+
+mkdir fuzz; cd fuzz
+cp ../mp4info.bc .
+
+echo $'' > $TMP_DIR/BBtargets.txt
+git diff HEAD^1 HEAD > ./commit.diff
+cp /home/showlinenum.awk ./
+sed -i -e 's/\r$//' showlinenum.awk
+chmod +x showlinenum.awk
+cat ./commit.diff | ./showlinenum.awk show_header=0 path=1 | grep -e "\.[ch]:[0-9]*:+" -e "\.cpp:[0-9]*:+" -e "\.cc:[0-9]*:+" | sed 's/:+.*$//' > ./targets
+
+/home/WAFLGo/instrument/bin/cbi --targets=targets mp4info.bc --stats=false
+cp ./targets_id.txt /home
+cp ./suffix.txt /home
+cp ./targets*.txt /home
+cp ./distance.txt /home
+cp ./branch-distance.txt /home
+cp ./branch-distance-min.txt /home
+cp ./branch-curloc.txt /home
+cp ./*_data.txt /home
+
+/home/WAFLGo/afl-clang-fast++ mp4info.ci.bc  -lstdc++  -o mp4info.ci
+cp ./bbinfo-fast.txt /home/bbinfo-ci-bc.txt
+cp ./branch-distance-order.txt /home
+cp ./*-distance-order.txt /home
+cp ./*-order.txt /home
+```
+Start fuzzing
+```commandline
+/home/WAFLGo/afl-fuzz  -T waflgo-bento4 -t 1000+ -m none -z exp -c 45m -q 1 -i /home/mp4 -o /home/out -- /home/waflgo-bento4/fuzz/mp4info.ci  @@
+```
+
+### bento4-issue-679
+Docker Container
+```commandline
+docker run -d --name waflgo-bento4-679 waflgo_image tail -f /dev/null
+docker exec -it waflgo-bento4-679 /bin/bash
+```
+Compile WAFLGo<br>
+Refer to the commands [here](https://github.com/NESA-Lab/WAFLGo/tree/master#how-to-test-with-waflgo)
+
+Copy Seeds to Required Dictionary
+```
+mkdir /home/mp4
+git clone https://github.com/FalconLi/waflgo_build_binary.git /home/waflgo_build_binary
+cp /home/waflgo_build_binary/seeds/mp4/* /home/mp4/
+```
+Download Subject
+```commandline
+git clone https://github.com/axiomatic-systems/Bento4.git /home/waflgo-bento4
+cd /home/waflgo-bento4; git checkout 2e29350
+```
+Build Binary
+```commandline
+export ADD="-g --notI "
+export CC=/home/WAFLGo/afl-clang-fast CXX=/home/WAFLGo/afl-clang-fast++  CFLAGS="$ADD" CXXFLAGS="$ADD"
+export AFL_CC=gclang AFL_CXX=gclang++
+
+cmake . 
+make clean;make
+unset AFL_CC AFL_CXX
+
+cp ./mp4info ./
+get-bc mp4info 
+
+mkdir fuzz; cd fuzz
+cp ../mp4info.bc .
+
+echo $'' > $TMP_DIR/BBtargets.txt
+git diff HEAD^1 HEAD > ./commit.diff
+cp /home/showlinenum.awk ./
+sed -i -e 's/\r$//' showlinenum.awk
+chmod +x showlinenum.awk
+cat ./commit.diff | ./showlinenum.awk show_header=0 path=1 | grep -e "\.[ch]:[0-9]*:+" -e "\.cpp:[0-9]*:+" -e "\.cc:[0-9]*:+" | sed 's/:+.*$//' > ./targets
+
+/home/WAFLGo/instrument/bin/cbi --targets=targets mp4info.bc --stats=false
+cp ./targets_id.txt /home
+cp ./suffix.txt /home
+cp ./targets*.txt /home
+cp ./distance.txt /home
+cp ./branch-distance.txt /home
+cp ./branch-distance-min.txt /home
+cp ./branch-curloc.txt /home
+cp ./*_data.txt /home
+
+/home/WAFLGo/afl-clang-fast++ mp4info.ci.bc  -lstdc++  -o mp4info.ci
+cp ./bbinfo-fast.txt /home/bbinfo-ci-bc.txt
+cp ./branch-distance-order.txt /home
+cp ./*-distance-order.txt /home
+cp ./*-order.txt /home
+```
+Start fuzzing
+```commandline
+/home/WAFLGo/afl-fuzz  -T waflgo-bento4 -t 1000+ -m none -z exp -c 45m -q 1 -i /home/mp4 -o /home/out -- /home/waflgo-bento4/fuzz/mp4info.ci  @@
+```
+
+### bento4-issue-732
+Docker Container
+```commandline
+docker run -d --name waflgo-bento4-732 waflgo_image tail -f /dev/null
+docker exec -it waflgo-bento4-732 /bin/bash
+```
+Compile WAFLGo<br>
+Refer to the commands [here](https://github.com/NESA-Lab/WAFLGo/tree/master#how-to-test-with-waflgo)
+
+Copy Seeds to Required Dictionary
+```
+mkdir /home/mp4
+git clone https://github.com/FalconLi/waflgo_build_binary.git /home/waflgo_build_binary
+cp /home/waflgo_build_binary/seeds/mp4/* /home/mp4/
+```
+Download Subject
+```commandline
+git clone https://github.com/axiomatic-systems/Bento4.git /home/waflgo-bento4
+cd /home/waflgo-bento4; git checkout bbb6f24
+```
+Build Binary
+```commandline
+export ADD="-g --notI "
+export CC=/home/WAFLGo/afl-clang-fast CXX=/home/WAFLGo/afl-clang-fast++  CFLAGS="$ADD" CXXFLAGS="$ADD"
+export AFL_CC=gclang AFL_CXX=gclang++
+
+cmake . 
+make clean;make
+unset AFL_CC AFL_CXX
+
+cp ./mp4audioclip ./
+get-bc mp4audioclip
+
+mkdir fuzz; cd fuzz
+cp ../mp4audioclip.bc .
+
+echo $'' > $TMP_DIR/BBtargets.txt
+git diff HEAD^1 HEAD > ./commit.diff
+cp /home/showlinenum.awk ./
+sed -i -e 's/\r$//' showlinenum.awk
+chmod +x showlinenum.awk
+cat ./commit.diff | ./showlinenum.awk show_header=0 path=1 | grep -e "\.[ch]:[0-9]*:+" -e "\.cpp:[0-9]*:+" -e "\.cc:[0-9]*:+" | sed 's/:+.*$//' > ./targets
+
+/home/WAFLGo/instrument/bin/cbi --targets=targets mp4audioclip.bc --stats=false
+cp ./targets_id.txt /home
+cp ./suffix.txt /home
+cp ./targets*.txt /home
+cp ./distance.txt /home
+cp ./branch-distance.txt /home
+cp ./branch-distance-min.txt /home
+cp ./branch-curloc.txt /home
+cp ./*_data.txt /home
+
+/home/WAFLGo/afl-clang-fast++ mp4audioclip.ci.bc  -lstdc++  -o mp4audioclip.ci
+cp ./bbinfo-fast.txt /home/bbinfo-ci-bc.txt
+cp ./branch-distance-order.txt /home
+cp ./*-distance-order.txt /home
+cp ./*-order.txt /home
+```
+Start fuzzing
+```commandline
+/home/WAFLGo/afl-fuzz  -T waflgo-bento4 -t 1000+ -m none -z exp -c 45m -q 1 -i /home/mp4 -o /home/out -- /home/waflgo-bento4/fuzz/mp4audioclip.ci  @@
+```
+
+### bento4-issue-751
+Docker Container
+```commandline
+docker run -d --name waflgo-bento4-751 waflgo_image tail -f /dev/null
+docker exec -it waflgo-bento4-751 /bin/bash
+```
+Compile WAFLGo<br>
+Refer to the commands [here](https://github.com/NESA-Lab/WAFLGo/tree/master#how-to-test-with-waflgo)
+
+Copy Seeds to Required Dictionary
+```
+mkdir /home/mp4
+git clone https://github.com/FalconLi/waflgo_build_binary.git /home/waflgo_build_binary
+cp /home/waflgo_build_binary/seeds/mp4/* /home/mp4/
+```
+Download Subject
+```commandline
+git clone https://github.com/axiomatic-systems/Bento4.git /home/waflgo-bento4
+cd /home/waflgo-bento4; git checkout 61b2012
+```
+Build Binary
+```commandline
+export ADD="-g --notI "
+export CC=/home/WAFLGo/afl-clang-fast CXX=/home/WAFLGo/afl-clang-fast++  CFLAGS="$ADD" CXXFLAGS="$ADD"
+export AFL_CC=gclang AFL_CXX=gclang++
+
+cmake . 
+make clean;make
+unset AFL_CC AFL_CXX
+
+cp ./mp42aac ./
+get-bc mp42aac
+
+mkdir fuzz; cd fuzz
+cp ../mp42aac.bc .
+
+echo $'' > $TMP_DIR/BBtargets.txt
+git diff HEAD^1 HEAD > ./commit.diff
+cp /home/showlinenum.awk ./
+sed -i -e 's/\r$//' showlinenum.awk
+chmod +x showlinenum.awk
+cat ./commit.diff | ./showlinenum.awk show_header=0 path=1 | grep -e "\.[ch]:[0-9]*:+" -e "\.cpp:[0-9]*:+" -e "\.cc:[0-9]*:+" | sed 's/:+.*$//' > ./targets
+
+/home/WAFLGo/instrument/bin/cbi --targets=targets mp42aac.bc --stats=false
+cp ./targets_id.txt /home
+cp ./suffix.txt /home
+cp ./targets*.txt /home
+cp ./distance.txt /home
+cp ./branch-distance.txt /home
+cp ./branch-distance-min.txt /home
+cp ./branch-curloc.txt /home
+cp ./*_data.txt /home
+
+/home/WAFLGo/afl-clang-fast++ mp42aac.ci.bc  -lstdc++  -o mp42aac.ci
+cp ./bbinfo-fast.txt /home/bbinfo-ci-bc.txt
+cp ./branch-distance-order.txt /home
+cp ./*-distance-order.txt /home
+cp ./*-order.txt /home
+```
+Start fuzzing
+```commandline
+/home/WAFLGo/afl-fuzz  -T waflgo-bento4 -t 1000+ -m none -z exp -c 45m -q 1 -i /home/mp4 -o /home/out -- /home/waflgo-bento4/fuzz/mp42aac.ci  @@ /dev/null
 ```
 
