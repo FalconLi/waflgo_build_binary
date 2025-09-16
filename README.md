@@ -1797,12 +1797,21 @@ cp ./branch-distance-min.txt /home
 cp ./branch-curloc.txt /home
 cp ./*_data.txt /home
 
+cat > tcpedit_stub.c << 'EOF'
+// Minimal stub for tcpedit_tcpedit_optDesc_p
+// This is an 8-byte read-only pointer, likely to option descriptors
+const void* const tcpedit_tcpedit_optDesc_p = 0;
+EOF
+
+/home/WAFLGo/afl-clang-fast -c tcpedit_stub.c -o tcpedit_stub.o
+
 /home/WAFLGo/afl-clang-fast++ tcpreplay.ci.bc \
-  ../src/tcpedit/libtcpedit.a \
-  ../src/common/libcommon.a \
-  ../lib/libstrl.a \
-  -lstdc++ -lopts -lpcap -lrt -lnsl \
-  -o tcpreplay.ci
+  tcpedit_stub.o \
+  /home/waflgo-tcpreplay/src/tcpedit/libtcpedit.a \
+  /home/waflgo-tcpreplay/src/common/libcommon.a \
+  /home/waflgo-tcpreplay/libopts/.libs/libopts.a \
+  /home/waflgo-tcpreplay/lib/libstrl.a \
+  -lstdc++ -lpcap -o tcpreplay.ci
 cp ./bbinfo-fast.txt /home/bbinfo-ci-bc.txt
 cp ./branch-distance-order.txt /home
 cp ./*-distance-order.txt /home
