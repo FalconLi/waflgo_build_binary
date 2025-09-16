@@ -1282,7 +1282,7 @@ cp ./*-order.txt /home
 ```
 Start fuzzing
 ```commandline
-/home/WAFLGo/afl-fuzz  -T waflgo-bento4 -t 1000+ -m none -z exp -c 45m -q 1 -i /home/mp4 -o /home/out -- /home/waflgo-bento4/fuzz/mp4audioclip.ci  @@
+/home/WAFLGo/afl-fuzz  -T waflgo-bento4 -t 1000+ -m none -z exp -c 45m -q 1 -i /home/mp4 -o /home/out -- /home/waflgo-bento4/fuzz/mp4audioclip.ci  @@ /dev/null
 ```
 
 ### bento4-issue-751
