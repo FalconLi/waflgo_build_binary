@@ -1389,7 +1389,7 @@ Start fuzzing
 ```
 Start fuzzing with ASAN enabled
 ```commandline
-export ASAN_OPTIONS=abort_on_error=1
+export ASAN_OPTIONS=abort_on_error=1:symbolize=0
 /home/WAFLGo/afl-fuzz  -T waflgo-bento4 -t 1000+ -m none -z exp -c 45m -q 1 -i /home/mp4 -o /home/out_asan -- /home/waflgo-bento4/fuzz/mp42aac.ci  @@ /dev/null
 ```
 
