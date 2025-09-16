@@ -1657,9 +1657,7 @@ cp ./*-order.txt /home
 ```
 Start fuzzing
 ```commandline
-/home/WAFLGo/afl-fuzz  -T waflgo-tcpreplay -t 1000+ -m none -z exp -c 45m -q 1 -i /home/pcap -o /home/out -- /home/waflgo-tcpreplay/fuzz/tcpprep.ci -i @@ -o /dev/null
-# or
-/home/WAFLGo/afl-fuzz  -T waflgo-tcpreplay -t 1000+ -m none -z exp -c 45m -q 1 -i /home/pcap -o /home/out -- /home/waflgo-tcpreplay/fuzz/tcpprep.ci -auto=bridge -i @@ -o /dev/null
+/home/WAFLGo/afl-fuzz  -T waflgo-tcpreplay -t 1000+ -m none -z exp -c 45m -q 1 -i /home/pcap -o /home/out -- /home/waflgo-tcpreplay/fuzz/tcpprep.ci --auto=bridge -i @@ -o /dev/null
 ```
 
 ### tcpreplay-issue-772
