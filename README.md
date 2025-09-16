@@ -1415,6 +1415,26 @@ cd /home/waflgo-tcpreplay; git checkout 0a65668a
 ```
 Build Binary
 ```commandline
+chmod 1777 /tmp
+apt-get update
+apt-get install -y guile-2.2-dev
+
+cd /home
+wget https://ftp.gnu.org/gnu/autogen/rel5.18.16/autogen-5.18.16.tar.xz
+tar -xvf autogen-5.18.16.tar.xz
+cd autogen-5.18.16
+./configure --disable-dependency-tracking
+sed -i 's/-Werror//g' getdefs/Makefile
+sed -i 's/-Wall//g' getdefs/Makefile
+make
+make install
+
+export ACLOCAL_PATH="/usr/share/aclocal:/usr/local/share/aclocal"
+echo 'export ACLOCAL_PATH="/usr/share/aclocal:/usr/local/share/aclocal"' >> ~/.bashrc
+
+apt-get install -y libpcap-dev
+
+cd /home/waflgo-tcpreplay
 export ADD="-g --notI"
 export CC=/home/WAFLGo/afl-clang-fast 
 export CXX=/home/WAFLGo/afl-clang-fast++
@@ -1423,12 +1443,12 @@ export CXXFLAGS="$ADD"
 export AFL_CC=gclang 
 export AFL_CXX=gclang++
 ./autogen.sh
-./configure --enable-static --disable-shared --without-python --without-readline LDFLAGS="-static"
+./configure --enable-static --disable-shared --without-python --without-readline --disable-local-libopts LDFLAGS="-static"
 
 make clean;make 
 unset AFL_CC AFL_CXX
 
-cp tools/tcprewrite ./
+cp src/tcprewrite ./
 get-bc tcprewrite
 
 mkdir fuzz; cd fuzz
