@@ -1482,3 +1482,272 @@ Start fuzzing
 /home/WAFLGo/afl-fuzz  -T waflgo-tcpreplay -t 1000+ -m none -z exp -c 45m -q 1 -i /home/pcap -o /home/out -- /home/waflgo-tcpreplay/fuzz/tcprewrite.ci -i @@ -o /dev/null
 ```
 
+### tcpreplay-issue-718
+Docker Container
+```commandline
+docker run -d --name waflgo-tcpreplay-718 waflgo_image tail -f /dev/null
+docker exec -it waflgo-tcpreplay-718 /bin/bash
+```
+Compile WAFLGo<br>
+Refer to the commands [here](https://github.com/NESA-Lab/WAFLGo/tree/master#how-to-test-with-waflgo)
+
+Copy Seeds to Required Dictionary
+```
+mkdir /home/pcap
+git clone https://github.com/FalconLi/waflgo_build_binary.git /home/waflgo_build_binary
+cp /home/waflgo_build_binary/seeds/pcap/* /home/pcap/
+```
+Download Subject
+```commandline
+git clone https://github.com/appneta/tcpreplay /home/waflgo-tcpreplay
+cd /home/waflgo-tcpreplay; git checkout 2c76868d
+```
+Build Binary
+```commandline
+chmod 1777 /tmp
+apt-get update
+apt-get install -y guile-2.2-dev
+
+cd /home
+wget https://ftp.gnu.org/gnu/autogen/rel5.18.16/autogen-5.18.16.tar.xz
+tar -xvf autogen-5.18.16.tar.xz
+cd autogen-5.18.16
+./configure --disable-dependency-tracking
+sed -i 's/-Werror//g' getdefs/Makefile
+sed -i 's/-Wall//g' getdefs/Makefile
+make
+make install
+
+export ACLOCAL_PATH="/usr/share/aclocal:/usr/local/share/aclocal"
+echo 'export ACLOCAL_PATH="/usr/share/aclocal:/usr/local/share/aclocal"' >> ~/.bashrc
+
+apt-get install -y libpcap-dev
+
+cd /home/waflgo-tcpreplay
+export ADD="-g --notI"
+export CC=/home/WAFLGo/afl-clang-fast 
+export CXX=/home/WAFLGo/afl-clang-fast++
+export CFLAGS="$ADD" 
+export CXXFLAGS="$ADD"
+export AFL_CC=gclang 
+export AFL_CXX=gclang++
+./autogen.sh
+./configure --enable-static --disable-shared --without-python --without-readline --disable-local-libopts LDFLAGS="-static"
+
+make clean;make 
+unset AFL_CC AFL_CXX
+
+cp src/tcprewrite ./
+get-bc tcprewrite
+
+mkdir fuzz; cd fuzz
+cp ../tcprewrite.bc .
+
+echo $'' > $TMP_DIR/BBtargets.txt
+git diff HEAD^1 HEAD > ./commit.diff
+cp /home/showlinenum.awk ./
+sed -i -e 's/\r$//' showlinenum.awk
+chmod +x showlinenum.awk
+cat ./commit.diff |  ./showlinenum.awk show_header=0 path=1 | grep -e "\.[ch]:[0-9]*:+" -e "\.cpp:[0-9]*:+" -e "\.cc:[0-9]*:+" | cut -d+ -f1 | rev | cut -c2- | rev | awk -F: '{n=split($1,a,"/"); print a[n]":"$2}' > ./targets
+
+/home/WAFLGo/instrument/bin/cbi --targets=targets tcprewrite.bc --stats=false
+cp ./targets_id.txt /home
+cp ./suffix.txt /home
+cp ./targets*.txt /home
+cp ./distance.txt /home
+cp ./branch-distance.txt /home
+cp ./branch-distance-min.txt /home
+cp ./branch-curloc.txt /home
+cp ./*_data.txt /home
+
+/home/WAFLGo/afl-clang-fast++ tcprewrite.ci.bc -lstdc++ -lopts -lpcap -o tcprewrite.ci
+cp ./bbinfo-fast.txt /home/bbinfo-ci-bc.txt
+cp ./branch-distance-order.txt /home
+cp ./*-distance-order.txt /home
+cp ./*-order.txt /home
+```
+Start fuzzing
+```commandline
+/home/WAFLGo/afl-fuzz  -T waflgo-tcpreplay -t 1000+ -m none -z exp -c 45m -q 1 -i /home/pcap -o /home/out -- /home/waflgo-tcpreplay/fuzz/tcprewrite.ci -i @@ -o /dev/null
+```
+
+### tcpreplay-issue-756
+Docker Container
+```commandline
+docker run -d --name waflgo-tcpreplay-756 waflgo_image tail -f /dev/null
+docker exec -it waflgo-tcpreplay-756 /bin/bash
+```
+Compile WAFLGo<br>
+Refer to the commands [here](https://github.com/NESA-Lab/WAFLGo/tree/master#how-to-test-with-waflgo)
+
+Copy Seeds to Required Dictionary
+```
+mkdir /home/pcap
+git clone https://github.com/FalconLi/waflgo_build_binary.git /home/waflgo_build_binary
+cp /home/waflgo_build_binary/seeds/pcap/* /home/pcap/
+```
+Download Subject
+```commandline
+git clone https://github.com/appneta/tcpreplay /home/waflgo-tcpreplay
+cd /home/waflgo-tcpreplay; git checkout 16442ac3
+```
+Build Binary
+```commandline
+chmod 1777 /tmp
+apt-get update
+apt-get install -y guile-2.2-dev
+
+cd /home
+wget https://ftp.gnu.org/gnu/autogen/rel5.18.16/autogen-5.18.16.tar.xz
+tar -xvf autogen-5.18.16.tar.xz
+cd autogen-5.18.16
+./configure --disable-dependency-tracking
+sed -i 's/-Werror//g' getdefs/Makefile
+sed -i 's/-Wall//g' getdefs/Makefile
+make
+make install
+
+export ACLOCAL_PATH="/usr/share/aclocal:/usr/local/share/aclocal"
+echo 'export ACLOCAL_PATH="/usr/share/aclocal:/usr/local/share/aclocal"' >> ~/.bashrc
+
+apt-get install -y libpcap-dev
+
+cd /home/waflgo-tcpreplay
+export ADD="-g --notI"
+export CC=/home/WAFLGo/afl-clang-fast 
+export CXX=/home/WAFLGo/afl-clang-fast++
+export CFLAGS="$ADD" 
+export CXXFLAGS="$ADD"
+export AFL_CC=gclang 
+export AFL_CXX=gclang++
+./autogen.sh
+./configure --enable-static --disable-shared --without-python --without-readline --disable-local-libopts LDFLAGS="-static"
+
+make clean;make 
+unset AFL_CC AFL_CXX
+
+cp src/tcpprep ./
+get-bc tcpprep
+
+mkdir fuzz; cd fuzz
+cp ../tcpprep.bc .
+
+echo $'' > $TMP_DIR/BBtargets.txt
+git diff HEAD^1 HEAD > ./commit.diff
+cp /home/showlinenum.awk ./
+sed -i -e 's/\r$//' showlinenum.awk
+chmod +x showlinenum.awk
+cat ./commit.diff |  ./showlinenum.awk show_header=0 path=1 | grep -e "\.[ch]:[0-9]*:+" -e "\.cpp:[0-9]*:+" -e "\.cc:[0-9]*:+" | cut -d+ -f1 | rev | cut -c2- | rev | awk -F: '{n=split($1,a,"/"); print a[n]":"$2}' > ./targets
+
+/home/WAFLGo/instrument/bin/cbi --targets=targets tcpprep.bc --stats=false
+cp ./targets_id.txt /home
+cp ./suffix.txt /home
+cp ./targets*.txt /home
+cp ./distance.txt /home
+cp ./branch-distance.txt /home
+cp ./branch-distance-min.txt /home
+cp ./branch-curloc.txt /home
+cp ./*_data.txt /home
+
+/home/WAFLGo/afl-clang-fast++ tcpprep.ci.bc -lstdc++ -lopts -lpcap -o tcpprep.ci
+cp ./bbinfo-fast.txt /home/bbinfo-ci-bc.txt
+cp ./branch-distance-order.txt /home
+cp ./*-distance-order.txt /home
+cp ./*-order.txt /home
+```
+Start fuzzing
+```commandline
+/home/WAFLGo/afl-fuzz  -T waflgo-tcpreplay -t 1000+ -m none -z exp -c 45m -q 1 -i /home/pcap -o /home/out -- /home/waflgo-tcpreplay/fuzz/tcpprep.ci -i @@ -o /dev/null
+# or
+/home/WAFLGo/afl-fuzz  -T waflgo-tcpreplay -t 1000+ -m none -z exp -c 45m -q 1 -i /home/pcap -o /home/out -- /home/waflgo-tcpreplay/fuzz/tcpprep.ci -auto=bridge -i @@ -o /dev/null
+```
+
+### tcpreplay-issue-772
+Docker Container
+```commandline
+docker run -d --name waflgo-tcpreplay-772 waflgo_image tail -f /dev/null
+docker exec -it waflgo-tcpreplay-772 /bin/bash
+```
+Compile WAFLGo<br>
+Refer to the commands [here](https://github.com/NESA-Lab/WAFLGo/tree/master#how-to-test-with-waflgo)
+
+Copy Seeds to Required Dictionary
+```
+mkdir /home/pcap
+git clone https://github.com/FalconLi/waflgo_build_binary.git /home/waflgo_build_binary
+cp /home/waflgo_build_binary/seeds/pcap/* /home/pcap/
+```
+Download Subject
+```commandline
+git clone https://github.com/appneta/tcpreplay /home/waflgo-tcpreplay
+cd /home/waflgo-tcpreplay; git checkout 4f9158da
+```
+Build Binary
+```commandline
+chmod 1777 /tmp
+apt-get update
+apt-get install -y guile-2.2-dev
+
+cd /home
+wget https://ftp.gnu.org/gnu/autogen/rel5.18.16/autogen-5.18.16.tar.xz
+tar -xvf autogen-5.18.16.tar.xz
+cd autogen-5.18.16
+./configure --disable-dependency-tracking
+sed -i 's/-Werror//g' getdefs/Makefile
+sed -i 's/-Wall//g' getdefs/Makefile
+make
+make install
+
+export ACLOCAL_PATH="/usr/share/aclocal:/usr/local/share/aclocal"
+echo 'export ACLOCAL_PATH="/usr/share/aclocal:/usr/local/share/aclocal"' >> ~/.bashrc
+
+apt-get install -y libpcap-dev
+
+cd /home/waflgo-tcpreplay
+export ADD="-g --notI"
+export CC=/home/WAFLGo/afl-clang-fast 
+export CXX=/home/WAFLGo/afl-clang-fast++
+export CFLAGS="$ADD" 
+export CXXFLAGS="$ADD"
+export AFL_CC=gclang 
+export AFL_CXX=gclang++
+./autogen.sh
+./configure --enable-static --disable-shared --without-python --without-readline --disable-local-libopts LDFLAGS="-static"
+
+make clean;make 
+unset AFL_CC AFL_CXX
+
+cp src/tcpreplay ./
+get-bc tcpreplay
+
+mkdir fuzz; cd fuzz
+cp ../tcpreplay.bc .
+
+echo $'' > $TMP_DIR/BBtargets.txt
+git diff HEAD^1 HEAD > ./commit.diff
+cp /home/showlinenum.awk ./
+sed -i -e 's/\r$//' showlinenum.awk
+chmod +x showlinenum.awk
+cat ./commit.diff |  ./showlinenum.awk show_header=0 path=1 | grep -e "\.[ch]:[0-9]*:+" -e "\.cpp:[0-9]*:+" -e "\.cc:[0-9]*:+" | cut -d+ -f1 | rev | cut -c2- | rev | awk -F: '{n=split($1,a,"/"); print a[n]":"$2}' > ./targets
+
+/home/WAFLGo/instrument/bin/cbi --targets=targets tcpreplay.bc --stats=false
+cp ./targets_id.txt /home
+cp ./suffix.txt /home
+cp ./targets*.txt /home
+cp ./distance.txt /home
+cp ./branch-distance.txt /home
+cp ./branch-distance-min.txt /home
+cp ./branch-curloc.txt /home
+cp ./*_data.txt /home
+
+/home/WAFLGo/afl-clang-fast++ tcpreplay.ci.bc -lstdc++ -lopts -lpcap -o tcpreplay.ci
+cp ./bbinfo-fast.txt /home/bbinfo-ci-bc.txt
+cp ./branch-distance-order.txt /home
+cp ./*-distance-order.txt /home
+cp ./*-order.txt /home
+```
+Start fuzzing
+```commandline
+/home/WAFLGo/afl-fuzz  -T waflgo-tcpreplay -t 1000+ -m none -z exp -c 45m -q 1 -i /home/pcap -o /home/out -- /home/waflgo-tcpreplay/fuzz/tcpreplay.ci @@
+```
+
