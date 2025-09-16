@@ -1694,9 +1694,6 @@ cd autogen-5.18.12
 make
 make install
 
-export ACLOCAL_PATH="/usr/share/aclocal:/usr/local/share/aclocal"
-echo 'export ACLOCAL_PATH="/usr/share/aclocal:/usr/local/share/aclocal"' >> ~/.bashrc
-
 apt-get install -y libpcap-dev
 
 cd /home/waflgo-tcpreplay
