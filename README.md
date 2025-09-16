@@ -1690,9 +1690,7 @@ cd /home
 wget https://ftp.gnu.org/gnu/autogen/rel5.18.12/autogen-5.18.12.tar.xz
 tar -xvf autogen-5.18.12.tar.xz
 cd autogen-5.18.12
-./configure --disable-dependency-tracking
-sed -i 's/-Werror//g' getdefs/Makefile
-sed -i 's/-Wall//g' getdefs/Makefile
+./configure
 make
 make install
 
