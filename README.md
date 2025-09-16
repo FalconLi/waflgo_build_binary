@@ -1684,7 +1684,7 @@ Build Binary
 ```commandline
 chmod 1777 /tmp
 apt-get update
-apt-get install -y guile-2.2-dev
+apt-get install -y guile-2.0-dev
 
 cd /home
 wget https://ftp.gnu.org/gnu/autogen/rel5.18.12/autogen-5.18.12.tar.xz
