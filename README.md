@@ -1712,7 +1712,7 @@ export CXXFLAGS="$ADD"
 export AFL_CC=gclang 
 export AFL_CXX=gclang++
 ./autogen.sh
-./configure --enable-static --disable-shared --without-python --without-readline --disable-local-libopts LDFLAGS="-static"
+./configure --enable-static --disable-shared --without-python --without-readline LDFLAGS="-static"
 
 make clean;make 
 unset AFL_CC AFL_CXX
@@ -1728,7 +1728,71 @@ git diff HEAD^1 HEAD > ./commit.diff
 cp /home/showlinenum.awk ./
 sed -i -e 's/\r$//' showlinenum.awk
 chmod +x showlinenum.awk
-cat ./commit.diff |  ./showlinenum.awk show_header=0 path=1 | grep -e "\.[ch]:[0-9]*:+" -e "\.cpp:[0-9]*:+" -e "\.cc:[0-9]*:+" | cut -d+ -f1 | rev | cut -c2- | rev | awk -F: '{n=split($1,a,"/"); print a[n]":"$2}' > ./targets
+cat ./commit.diff | ./showlinenum.awk show_header=0 path=1 | awk '
+BEGIN { 
+    prev_line = 0; prev_file = ""; 
+    in_deleted_block = 0; deleted_file = ""; deleted_prev_line = 0 
+}
+/\.(c|h|cpp|cc):/ {
+    if ($0 ~ /:[0-9]+:[+-]/) {
+        # Line with number and +/- change
+        # First, handle any pending deleted block
+        if (in_deleted_block) {
+            if (deleted_file == prev_file && deleted_prev_line > 0) {
+                print deleted_file ":" deleted_prev_line
+                print deleted_file ":" (deleted_prev_line + 1)
+            }
+            in_deleted_block = 0
+        }
+        
+        match($0, /^([^:]+):([0-9]+):([+-])/, arr)
+        file = arr[1]
+        line_num = arr[2]
+        change_type = arr[3]
+        
+        gsub(".*/", "", file)  # Extract just filename
+        print file ":" line_num
+        
+        prev_line = line_num
+        prev_file = file
+    } else if ($0 ~ /:[[:space:]]+:[+-]/) {
+        # Deleted line (no line number, just spaces)
+        match($0, /^([^:]+):[[:space:]]+:[-]/, arr)
+        file = arr[1]
+        gsub(".*/", "", file)  # Extract just filename
+        
+        if (!in_deleted_block) {
+            # Start of a new deleted block
+            in_deleted_block = 1
+            deleted_file = file
+            deleted_prev_line = prev_line
+        }
+    } else if ($0 ~ /:[0-9]+:/) {
+        # Context line (no +/- but has line number)
+        # First, handle any pending deleted block
+        if (in_deleted_block) {
+            if (deleted_file == prev_file && deleted_prev_line > 0) {
+                print deleted_file ":" deleted_prev_line
+                print deleted_file ":" (deleted_prev_line + 1)
+            }
+            in_deleted_block = 0
+        }
+        
+        match($0, /^([^:]+):([0-9]+):/, arr)
+        prev_line = arr[2]
+        prev_file = arr[1]
+        gsub(".*/", "", prev_file)
+    }
+}
+END {
+    # Handle any remaining deleted block at the end
+    if (in_deleted_block) {
+        if (deleted_file == prev_file && deleted_prev_line > 0) {
+            print deleted_file ":" deleted_prev_line
+            print deleted_file ":" (deleted_prev_line + 1)
+        }
+    }
+}' > ./targets
 
 /home/WAFLGo/instrument/bin/cbi --targets=targets tcpreplay.bc --stats=false
 cp ./targets_id.txt /home
@@ -1740,7 +1804,12 @@ cp ./branch-distance-min.txt /home
 cp ./branch-curloc.txt /home
 cp ./*_data.txt /home
 
-/home/WAFLGo/afl-clang-fast++ tcpreplay.ci.bc -lstdc++ -lopts -lpcap -o tcpreplay.ci
+/home/WAFLGo/afl-clang-fast++ tcpreplay.ci.bc \
+  ../src/tcpedit/libtcpedit.a \
+  ../src/common/libcommon.a \
+  ../lib/libstrl.a \
+  -lstdc++ -lopts -lpcap -lrt -lnsl \
+  -o tcpreplay.ci
 cp ./bbinfo-fast.txt /home/bbinfo-ci-bc.txt
 cp ./branch-distance-order.txt /home
 cp ./*-distance-order.txt /home
