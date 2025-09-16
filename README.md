@@ -1689,9 +1689,9 @@ apt-get update
 apt-get install -y guile-2.2-dev
 
 cd /home
-wget https://ftp.gnu.org/gnu/autogen/rel5.18.16/autogen-5.18.16.tar.xz
-tar -xvf autogen-5.18.16.tar.xz
-cd autogen-5.18.16
+wget https://ftp.gnu.org/gnu/autogen/rel5.18.16/autogen-5.18.12.tar.xz
+tar -xvf autogen-5.18.12.tar.xz
+cd autogen-5.18.12
 ./configure --disable-dependency-tracking
 sed -i 's/-Werror//g' getdefs/Makefile
 sed -i 's/-Wall//g' getdefs/Makefile
