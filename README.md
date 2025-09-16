@@ -1346,15 +1346,13 @@ cp ./*-order.txt /home
 ```
 Build Binary with ASAN
 ```commandline
-export ADD="-g --notI -fsanitize=address"
+export ADD="-g --notI"
 export CC=/home/WAFLGo/afl-clang-fast CXX=/home/WAFLGo/afl-clang-fast++  CFLAGS="$ADD" CXXFLAGS="$ADD"
 export AFL_CC=gclang AFL_CXX=gclang++
-export LDFLAGS="-fsanitize=address"
 
 cmake . 
 make clean;make
 unset AFL_CC AFL_CXX
-unset LDFLAGS
 
 cp ./mp42aac ./
 get-bc mp42aac
@@ -1379,7 +1377,7 @@ cp ./branch-distance-min.txt /home
 cp ./branch-curloc.txt /home
 cp ./*_data.txt /home
 
-/home/WAFLGo/afl-clang-fast++ mp42aac.ci.bc  -lstdc++  -o mp42aac.ci
+/home/WAFLGo/afl-clang-fast++ mp42aac.ci.bc  -fsanitize=address -lstdc++  -o mp42aac.ci
 cp ./bbinfo-fast.txt /home/bbinfo-ci-bc.txt
 cp ./branch-distance-order.txt /home
 cp ./*-distance-order.txt /home
@@ -1388,5 +1386,10 @@ cp ./*-order.txt /home
 Start fuzzing
 ```commandline
 /home/WAFLGo/afl-fuzz  -T waflgo-bento4 -t 1000+ -m none -z exp -c 45m -q 1 -i /home/mp4 -o /home/out -- /home/waflgo-bento4/fuzz/mp42aac.ci  @@ /dev/null
+```
+Start fuzzing with ASAN enabled
+```commandline
+export ASAN_OPTIONS=abort_on_error=1
+/home/WAFLGo/afl-fuzz  -T waflgo-bento4 -t 1000+ -m none -z exp -c 45m -q 1 -i /home/mp4 -o /home/out_asan -- /home/waflgo-bento4/fuzz/mp42aac.ci  @@ /dev/null
 ```
 
