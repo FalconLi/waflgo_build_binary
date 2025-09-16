@@ -1471,7 +1471,7 @@ cp ./branch-distance-min.txt /home
 cp ./branch-curloc.txt /home
 cp ./*_data.txt /home
 
-/home/WAFLGo/afl-clang-fast++ tcprewrite.ci.bc  -lstdc++ -o tcprewrite.ci
+/home/WAFLGo/afl-clang-fast++ tcprewrite.ci.bc -lstdc++ -lopts -lpcap -o tcprewrite.ci
 cp ./bbinfo-fast.txt /home/bbinfo-ci-bc.txt
 cp ./branch-distance-order.txt /home
 cp ./*-distance-order.txt /home
