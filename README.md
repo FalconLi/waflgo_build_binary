@@ -1326,7 +1326,7 @@ git diff HEAD^1 HEAD > ./commit.diff
 cp /home/showlinenum.awk ./
 sed -i -e 's/\r$//' showlinenum.awk
 chmod +x showlinenum.awk
-cat ./commit.diff | ./showlinenum.awk show_header=0 path=1 | grep -e "\.[ch]:[0-9]*:+" -e "\.cpp:[0-9]*:+" -e "\.cc:[0-9]*:+" | sed 's/:+.*$//' > ./targets
+cat ./commit.diff | ./showlinenum.awk show_header=0 path=1 | grep -e "\.[ch]:[0-9]*: " -e "\.cpp:[0-9]*: " -e "\.cc:[0-9]*: " | sed 's/: .*//' > ./targets
 
 /home/WAFLGo/instrument/bin/cbi --targets=targets mp42aac.bc --stats=false
 cp ./targets_id.txt /home
