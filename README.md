@@ -1798,9 +1798,26 @@ cp ./branch-curloc.txt /home
 cp ./*_data.txt /home
 
 cat > tcpedit_stub.c << 'EOF'
-// Minimal stub for tcpedit_tcpedit_optDesc_p
-// This is an 8-byte read-only pointer, likely to option descriptors
-const void* const tcpedit_tcpedit_optDesc_p = 0;
+#include <stdio.h>
+#include <stdlib.h>
+
+// More complete stub for tcpedit
+typedef struct {
+    char* name;
+    char* desc;
+    int value;
+} optDesc_t;
+
+static optDesc_t dummy_opts[] = {
+    {"dummy", "dummy option", 0},
+    {NULL, NULL, 0}
+};
+
+const void* const tcpedit_tcpedit_optDesc_p = (void*)dummy_opts;
+
+// Add any other missing symbols
+void tcpedit_init(void) {}
+void tcpedit_cleanup(void) {}
 EOF
 
 /home/WAFLGo/afl-clang-fast -c tcpedit_stub.c -o tcpedit_stub.o
