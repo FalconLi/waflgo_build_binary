@@ -1819,6 +1819,6 @@ cp ./*-order.txt /home
 ```
 Start fuzzing
 ```commandline
-/home/WAFLGo/afl-fuzz  -T waflgo-tcpreplay -t 1000+ -m none -z exp -c 45m -q 1 -i /home/pcap -o /home/out -- /home/waflgo-tcpreplay/fuzz/tcpreplay.ci @@
+/home/WAFLGo/afl-fuzz  -T waflgo-tcpreplay -t 1000+ -m none -z exp -c 45m -q 1 -i /home/pcap -o /home/out -- /home/waflgo-tcpreplay/fuzz/tcpreplay.ci -i eth0 @@
 ```
 
