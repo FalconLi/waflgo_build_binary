@@ -1839,3 +1839,139 @@ Start fuzzing
 /home/WAFLGo/afl-fuzz  -T waflgo-tcpreplay -t 1000+ -m none -z exp -c 45m -q 1 -i /home/pcap -o /home/out -- /home/waflgo-tcpreplay/fuzz/tcpreplay.ci -i eth0 @@
 ```
 
+### poppler-issue-1282
+Docker Container
+```commandline
+docker run -d --name waflgo-poppler-1282 waflgo_image tail -f /dev/null
+docker exec -it waflgo-poppler-1282 /bin/bash
+```
+Compile WAFLGo<br>
+Refer to the commands [here](https://github.com/NESA-Lab/WAFLGo/tree/master#how-to-test-with-waflgo)
+
+Copy Seeds to Required Dictionary
+```
+mkdir /home/pdf
+git clone https://github.com/FalconLi/waflgo_build_binary.git /home/waflgo_build_binary
+cp /home/waflgo_build_binary/seeds/pdf/* /home/pdf/
+```
+Download Subject
+```commandline
+git clone https://gitlab.freedesktop.org/poppler/poppler.git /home/waflgo-poppler
+cd /home/waflgo-poppler; git checkout 3d35d20
+```
+Build Binary
+```commandline
+export ADD="-g --notI"
+export CC=/home/WAFLGo/afl-clang-fast 
+export CXX=/home/WAFLGo/afl-clang-fast++
+export CFLAGS="$ADD" 
+export CXXFLAGS="$ADD"
+export AFL_CC=gclang 
+export AFL_CXX=gclang++
+
+cmake . 
+make clean;make 
+unset AFL_CC AFL_CXX
+
+cp src/tcprewrite ./
+get-bc tcprewrite
+
+mkdir fuzz; cd fuzz
+cp ../tcprewrite.bc .
+
+echo $'' > $TMP_DIR/BBtargets.txt
+git diff HEAD^1 HEAD > ./commit.diff
+cp /home/showlinenum.awk ./
+sed -i -e 's/\r$//' showlinenum.awk
+chmod +x showlinenum.awk
+cat ./commit.diff |  ./showlinenum.awk show_header=0 path=1 | grep -e "\.[ch]:[0-9]*:+" -e "\.cpp:[0-9]*:+" -e "\.cc:[0-9]*:+" | cut -d+ -f1 | rev | cut -c2- | rev | awk -F: '{n=split($1,a,"/"); print a[n]":"$2}' > ./targets
+
+/home/WAFLGo/instrument/bin/cbi --targets=targets tcprewrite.bc --stats=false
+cp ./targets_id.txt /home
+cp ./suffix.txt /home
+cp ./targets*.txt /home
+cp ./distance.txt /home
+cp ./branch-distance.txt /home
+cp ./branch-distance-min.txt /home
+cp ./branch-curloc.txt /home
+cp ./*_data.txt /home
+
+/home/WAFLGo/afl-clang-fast++ tcprewrite.ci.bc -lstdc++ -lopts -lpcap -o tcprewrite.ci
+cp ./bbinfo-fast.txt /home/bbinfo-ci-bc.txt
+cp ./branch-distance-order.txt /home
+cp ./*-distance-order.txt /home
+cp ./*-order.txt /home
+```
+Start fuzzing
+```commandline
+/home/WAFLGo/afl-fuzz  -T waflgo-tcpreplay -t 1000+ -m none -z exp -c 45m -q 1 -i /home/pcap -o /home/out -- /home/waflgo-tcpreplay/fuzz/tcprewrite.ci -i @@ -o /dev/null
+```
+
+### poppler-issue-1289
+Docker Container
+```commandline
+docker run -d --name waflgo-poppler-1289 waflgo_image tail -f /dev/null
+docker exec -it waflgo-poppler-1289 /bin/bash
+```
+Compile WAFLGo<br>
+Refer to the commands [here](https://github.com/NESA-Lab/WAFLGo/tree/master#how-to-test-with-waflgo)
+
+Copy Seeds to Required Dictionary
+```
+mkdir /home/pdf
+git clone https://github.com/FalconLi/waflgo_build_binary.git /home/waflgo_build_binary
+cp /home/waflgo_build_binary/seeds/pdf/* /home/pdf/
+```
+Download Subject
+```commandline
+git clone https://gitlab.freedesktop.org/poppler/poppler.git /home/waflgo-poppler
+cd /home/waflgo-poppler; git checkout 3cae777
+```
+Build Binary
+```commandline
+export ADD="-g --notI"
+export CC=/home/WAFLGo/afl-clang-fast 
+export CXX=/home/WAFLGo/afl-clang-fast++
+export CFLAGS="$ADD" 
+export CXXFLAGS="$ADD"
+export AFL_CC=gclang 
+export AFL_CXX=gclang++
+
+cmake . 
+make clean;make 
+unset AFL_CC AFL_CXX
+
+cp src/tcprewrite ./
+get-bc tcprewrite
+
+mkdir fuzz; cd fuzz
+cp ../tcprewrite.bc .
+
+echo $'' > $TMP_DIR/BBtargets.txt
+git diff HEAD^1 HEAD > ./commit.diff
+cp /home/showlinenum.awk ./
+sed -i -e 's/\r$//' showlinenum.awk
+chmod +x showlinenum.awk
+cat ./commit.diff |  ./showlinenum.awk show_header=0 path=1 | grep -e "\.[ch]:[0-9]*:+" -e "\.cpp:[0-9]*:+" -e "\.cc:[0-9]*:+" | cut -d+ -f1 | rev | cut -c2- | rev | awk -F: '{n=split($1,a,"/"); print a[n]":"$2}' > ./targets
+
+/home/WAFLGo/instrument/bin/cbi --targets=targets tcprewrite.bc --stats=false
+cp ./targets_id.txt /home
+cp ./suffix.txt /home
+cp ./targets*.txt /home
+cp ./distance.txt /home
+cp ./branch-distance.txt /home
+cp ./branch-distance-min.txt /home
+cp ./branch-curloc.txt /home
+cp ./*_data.txt /home
+
+/home/WAFLGo/afl-clang-fast++ tcprewrite.ci.bc -lstdc++ -lopts -lpcap -o tcprewrite.ci
+cp ./bbinfo-fast.txt /home/bbinfo-ci-bc.txt
+cp ./branch-distance-order.txt /home
+cp ./*-distance-order.txt /home
+cp ./*-order.txt /home
+```
+Start fuzzing
+```commandline
+/home/WAFLGo/afl-fuzz  -T waflgo-tcpreplay -t 1000+ -m none -z exp -c 45m -q 1 -i /home/pcap -o /home/out -- /home/waflgo-tcpreplay/fuzz/tcprewrite.ci -i @@ -o /dev/null
+```
+
