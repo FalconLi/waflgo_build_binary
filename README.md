@@ -1660,7 +1660,7 @@ Start fuzzing
 /home/WAFLGo/afl-fuzz  -T waflgo-tcpreplay -t 1000+ -m none -z exp -c 45m -q 1 -i /home/pcap -o /home/out -- /home/waflgo-tcpreplay/fuzz/tcpprep.ci --auto=bridge -i @@ -o /dev/null
 ```
 
-### tcpreplay-issue-772
+### tcpreplay-issue-772 (Unable to run after building binary, anyone who can solve this error, just raise an issue)
 Docker Container
 ```commandline
 docker run -d --name waflgo-tcpreplay-772 waflgo_image tail -f /dev/null
