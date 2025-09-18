@@ -1866,6 +1866,15 @@ chmod 1777 /tmp
 apt-get update
 apt-get install -y libfreetype6-dev libfontconfig1-dev libjpeg-dev libpng-dev libopenjp2-7-dev libtiff5-dev libcairo2-dev
 
+#export ADD="-g -static --notI"
+#export CC=/home/WAFLGo/afl-clang-fast 
+#export CXX=/home/WAFLGo/afl-clang-fast++
+#export CFLAGS="$ADD" 
+#export CXXFLAGS="$ADD"
+#export LDFLAGS="-static"
+#export AFL_CC=gclang 
+#export AFL_CXX=gclang++
+
 export ADD="-g --notI"
 export CC=/home/WAFLGo/afl-clang-fast 
 export CXX=/home/WAFLGo/afl-clang-fast++
@@ -1874,7 +1883,10 @@ export CXXFLAGS="$ADD"
 export AFL_CC=gclang 
 export AFL_CXX=gclang++
 
-cmake . 
+#cmake .
+cmake . \
+  -DCMAKE_BUILD_TYPE=Debug \
+  -DBUILD_SHARED_LIBS=OFF
 make clean;make 
 unset AFL_CC AFL_CXX
 
