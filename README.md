@@ -1961,7 +1961,9 @@ export CXXFLAGS="$ADD"
 export AFL_CC=gclang 
 export AFL_CXX=gclang++
 
-cmake .
+cmake . \
+  -DCMAKE_BUILD_TYPE=Debug \
+  -DBUILD_SHARED_LIBS=OFF
 make clean;make 
 unset AFL_CC AFL_CXX
 
