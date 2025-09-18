@@ -1921,10 +1921,7 @@ cp ./*-order.txt /home
 ```
 Start fuzzing
 ```commandline
-export LD_LIBRARY_PATH=/home/waflgo-poppler:/home/waflgo-poppler/cpp:/home/waflgo-poppler/glib:$LD_LIBRARY_PATH
 /home/WAFLGo/afl-fuzz  -T waflgo-poppler -t 1000+ -m none -z exp -c 45m -q 1 -i /home/pdf -o /home/out -- /home/waflgo-poppler/fuzz/pdfunite.ci @@ @@ /dev/null
-# or
-/home/WAFLGo/afl-fuzz  -T waflgo-poppler -t 1000+ -m none -z exp -c 45m -q 1 -i /home/pdf -o /home/out -- /home/waflgo-poppler/fuzz/pdfunite.ci @@ /dev/null
 ```
 
 ### poppler-issue-1289
@@ -1998,10 +1995,7 @@ cp ./*-order.txt /home
 ```
 Start fuzzing
 ```commandline
-export LD_LIBRARY_PATH=/home/waflgo-poppler:/home/waflgo-poppler/cpp:/home/waflgo-poppler/glib:$LD_LIBRARY_PATH
 /home/WAFLGo/afl-fuzz  -T waflgo-poppler -t 1000+ -m none -z exp -c 45m -q 1 -i /home/pdf -o /home/out -- /home/waflgo-poppler/fuzz/pdfunite.ci @@ @@ /dev/null
-# or
-/home/WAFLGo/afl-fuzz  -T waflgo-poppler -t 1000+ -m none -z exp -c 45m -q 1 -i /home/pdf -o /home/out -- /home/waflgo-poppler/fuzz/pdfunite.ci @@ /dev/null
 ```
 
 ### poppler-issue-1303
@@ -2030,15 +2024,41 @@ chmod 1777 /tmp
 apt-get update
 apt-get install -y libfreetype6-dev libfontconfig1-dev libjpeg-dev libpng-dev libopenjp2-7-dev libtiff5-dev libcairo2-dev
 
-export ADD="-g --notI"
-export CC=/home/WAFLGo/afl-clang-fast 
-export CXX=/home/WAFLGo/afl-clang-fast++
-export CFLAGS="$ADD" 
-export CXXFLAGS="$ADD"
+cat > toolchain.cmake << 'EOF'
+set(CMAKE_C_COMPILER /home/WAFLGo/afl-clang-fast)
+set(CMAKE_CXX_COMPILER /home/WAFLGo/afl-clang-fast++)
+set(CMAKE_C_FLAGS_INIT "-g  --notI -fPIC")
+set(CMAKE_CXX_FLAGS_INIT "-g --notI -fPIC")
+
+# Manually set library paths to bypass detection tests
+set(FREETYPE_LIBRARY /usr/lib/x86_64-linux-gnu/libfreetype.so)
+set(FREETYPE_INCLUDE_DIRS /usr/include/freetype2)
+set(FREETYPE_FOUND TRUE)
+
+set(JPEG_LIBRARY /usr/lib/x86_64-linux-gnu/libjpeg.so)
+set(JPEG_INCLUDE_DIR /usr/include)
+set(JPEG_FOUND TRUE)
+
+set(PNG_LIBRARY /usr/lib/x86_64-linux-gnu/libpng.so)
+set(PNG_PNG_INCLUDE_DIR /usr/include)
+set(PNG_FOUND TRUE)
+
+set(TIFF_LIBRARY /usr/lib/x86_64-linux-gnu/libtiff.so)
+set(TIFF_INCLUDE_DIR /usr/include)
+set(TIFF_FOUND TRUE)
+
+set(CAIRO_LIBRARIES /usr/lib/x86_64-linux-gnu/libcairo.so)
+set(CAIRO_INCLUDE_DIRS /usr/include/cairo)
+set(CAIRO_FOUND TRUE)
+
+set(ICONV_LIBRARIES "")
+set(ICONV_FOUND TRUE)
+EOF
+
 export AFL_CC=gclang 
 export AFL_CXX=gclang++
 
-cmake .
+cmake . -DCMAKE_TOOLCHAIN_FILE=toolchain.cmake -DENABLE_LIBOPENJPEG=none -DCMAKE_BUILD_TYPE=Debug   -DBUILD_SHARED_LIBS=OFF
 make clean;make 
 unset AFL_CC AFL_CXX
 
@@ -2065,7 +2085,7 @@ cp ./branch-distance-min.txt /home
 cp ./branch-curloc.txt /home
 cp ./*_data.txt /home
 
-/home/WAFLGo/afl-clang-fast++ pdftops.ci.bc -lstdc++ -L/home/waflgo-poppler -lpoppler -o pdftops.ci
+/home/WAFLGo/afl-clang-fast++ pdftops.ci.bc -lstdc++ -lfontconfig -ljpeg -lopenjp2 -lfreetype -lpng -lz -ltiff -o pdftops.ci
 cp ./bbinfo-fast.txt /home/bbinfo-ci-bc.txt
 cp ./branch-distance-order.txt /home
 cp ./*-distance-order.txt /home
@@ -2073,7 +2093,6 @@ cp ./*-order.txt /home
 ```
 Start fuzzing
 ```commandline
-export LD_LIBRARY_PATH=/home/waflgo-poppler:/home/waflgo-poppler/cpp:/home/waflgo-poppler/glib:$LD_LIBRARY_PATH
 /home/WAFLGo/afl-fuzz  -T waflgo-poppler -t 1000+ -m none -z exp -c 45m -q 1 -i /home/pdf -o /home/out -- /home/waflgo-poppler/fuzz/pdftops.ci @@ /dev/null
 ```
 
@@ -2172,7 +2191,7 @@ cp ./branch-distance-min.txt /home
 cp ./branch-curloc.txt /home
 cp ./*_data.txt /home
 
-/home/WAFLGo/afl-clang-fast++ pdftoppm.ci.bc -lstdc++ -L/home/waflgo-poppler -lpoppler -o pdftoppm.ci
+/home/WAFLGo/afl-clang-fast++ pdftoppm.ci.bc -lstdc++ -lfontconfig -ljpeg -lopenjp2 -lfreetype -lpng -ltiff -o pdftoppm.ci
 cp ./bbinfo-fast.txt /home/bbinfo-ci-bc.txt
 cp ./branch-distance-order.txt /home
 cp ./*-distance-order.txt /home
@@ -2180,7 +2199,6 @@ cp ./*-order.txt /home
 ```
 Start fuzzing
 ```commandline
-export LD_LIBRARY_PATH=/home/waflgo-poppler:/home/waflgo-poppler/cpp:/home/waflgo-poppler/glib:$LD_LIBRARY_PATH
 /home/WAFLGo/afl-fuzz  -T waflgo-poppler -t 1000+ -m none -z exp -c 45m -q 1 -i /home/pdf -o /home/out -- /home/waflgo-poppler/fuzz/pdftoppm.ci @@
 # or
 /home/WAFLGo/afl-fuzz  -T waflgo-poppler -t 1000+ -m none -z exp -c 45m -q 1 -i /home/pdf -o /home/out -- /home/waflgo-poppler/fuzz/pdftoppm.ci -mono -cropbox @@
@@ -2220,7 +2238,9 @@ export CXXFLAGS="$ADD"
 export AFL_CC=gclang 
 export AFL_CXX=gclang++
 
-cmake .
+cmake . \
+  -DCMAKE_BUILD_TYPE=Debug \
+  -DBUILD_SHARED_LIBS=OFF
 make clean;make 
 unset AFL_CC AFL_CXX
 
@@ -2247,7 +2267,7 @@ cp ./branch-distance-min.txt /home
 cp ./branch-curloc.txt /home
 cp ./*_data.txt /home
 
-/home/WAFLGo/afl-clang-fast++ pdftoppm.ci.bc -lstdc++ -L/home/waflgo-poppler -lpoppler -o pdftoppm.ci
+/home/WAFLGo/afl-clang-fast++ pdftoppm.ci.bc -lstdc++ -lfontconfig -ljpeg -lopenjp2 -lfreetype -lpng -ltiff -o pdftoppm.ci
 cp ./bbinfo-fast.txt /home/bbinfo-ci-bc.txt
 cp ./branch-distance-order.txt /home
 cp ./*-distance-order.txt /home
@@ -2255,7 +2275,6 @@ cp ./*-order.txt /home
 ```
 Start fuzzing
 ```commandline
-export LD_LIBRARY_PATH=/home/waflgo-poppler:/home/waflgo-poppler/cpp:/home/waflgo-poppler/glib:$LD_LIBRARY_PATH
 /home/WAFLGo/afl-fuzz  -T waflgo-poppler -t 1000+ -m none -z exp -c 45m -q 1 -i /home/pdf -o /home/out -- /home/waflgo-poppler/fuzz/pdftoppm.ci @@
 # or
 /home/WAFLGo/afl-fuzz  -T waflgo-poppler -t 1000+ -m none -z exp -c 45m -q 1 -i /home/pdf -o /home/out -- /home/waflgo-poppler/fuzz/pdftoppm.ci -mono -cropbox @@
