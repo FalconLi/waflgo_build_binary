@@ -1913,7 +1913,7 @@ cp ./branch-distance-min.txt /home
 cp ./branch-curloc.txt /home
 cp ./*_data.txt /home
 
-/home/WAFLGo/afl-clang-fast++ pdfunite.ci.bc -lstdc++ -o pdfunite.ci
+/home/WAFLGo/afl-clang-fast++ pdfunite.ci.bc -lstdc++ -lfontconfig -ljpeg -lopenjp2 -o pdfunite.ci
 cp ./bbinfo-fast.txt /home/bbinfo-ci-bc.txt
 cp ./branch-distance-order.txt /home
 cp ./*-distance-order.txt /home
@@ -1990,7 +1990,7 @@ cp ./branch-distance-min.txt /home
 cp ./branch-curloc.txt /home
 cp ./*_data.txt /home
 
-/home/WAFLGo/afl-clang-fast++ pdfunite.ci.bc -lstdc++ -L/home/waflgo-poppler -lpoppler -o pdfunite.ci
+/home/WAFLGo/afl-clang-fast++ pdfunite.ci.bc -lstdc++ -lfontconfig -ljpeg -lopenjp2 -o pdfunite.ci
 cp ./bbinfo-fast.txt /home/bbinfo-ci-bc.txt
 cp ./branch-distance-order.txt /home
 cp ./*-distance-order.txt /home
