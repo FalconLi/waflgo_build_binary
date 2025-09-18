@@ -2280,3 +2280,70 @@ Start fuzzing
 /home/WAFLGo/afl-fuzz  -T waflgo-poppler -t 1000+ -m none -z exp -c 45m -q 1 -i /home/pdf -o /home/out -- /home/waflgo-poppler/fuzz/pdftoppm.ci -mono -cropbox @@
 ```
 
+### imagemagick-issue-6075
+Docker Container
+```commandline
+docker run -d --name waflgo-imagemagick-6075 waflgo_image tail -f /dev/null
+docker exec -it waflgo-imagemagick-6075 /bin/bash
+```
+Compile WAFLGo<br>
+Refer to the commands [here](https://github.com/NESA-Lab/WAFLGo/tree/master#how-to-test-with-waflgo)
+
+Copy Seeds to Required Dictionary
+```
+mkdir /home/imagemagick
+git clone https://github.com/FalconLi/waflgo_build_binary.git /home/waflgo_build_binary
+cp /home/waflgo_build_binary/seeds/imagemagick/* /home/imagemagick/
+```
+Download Subject
+```commandline
+git clone https://github.com/ImageMagick/ImageMagick.git /home/waflgo-imagemagick
+cd /home/waflgo-imagemagick; git checkout a107b941
+```
+Build Binary
+```commandline
+export ADD="-g --notI"
+export CC=/home/WAFLGo/afl-clang-fast 
+export CXX=/home/WAFLGo/afl-clang-fast++
+export CFLAGS="$ADD" 
+export CXXFLAGS="$ADD"
+export AFL_CC=gclang 
+export AFL_CXX=gclang++
+./configure --enable-static --disable-shared --without-python --without-readline LDFLAGS="-static"
+
+make clean;make 
+unset AFL_CC AFL_CXX
+
+cp utilities/magick ./
+get-bc magick
+
+mkdir fuzz; cd fuzz
+cp ../magick.bc .
+
+echo $'' > $TMP_DIR/BBtargets.txt
+git diff HEAD^1 HEAD > ./commit.diff
+cp /home/showlinenum.awk ./
+sed -i -e 's/\r$//' showlinenum.awk
+chmod +x showlinenum.awk
+cat ./commit.diff |  ./showlinenum.awk show_header=0 path=1 | grep -e "\.[ch]:[0-9]*:+" -e "\.cpp:[0-9]*:+" -e "\.cc:[0-9]*:+" | cut -d+ -f1 | rev | cut -c2- | rev | awk -F: '{n=split($1,a,"/"); print a[n]":"$2}' > ./targets
+
+/home/WAFLGo/instrument/bin/cbi --targets=targets magick.bc --stats=false
+cp ./targets_id.txt /home
+cp ./suffix.txt /home
+cp ./targets*.txt /home
+cp ./distance.txt /home
+cp ./branch-distance.txt /home
+cp ./branch-distance-min.txt /home
+cp ./branch-curloc.txt /home
+cp ./*_data.txt /home
+
+/home/WAFLGo/afl-clang-fast++ magick.ci.bc  -lstdc++ -lz -o magick.ci
+cp ./bbinfo-fast.txt /home/bbinfo-ci-bc.txt
+cp ./branch-distance-order.txt /home
+cp ./*-distance-order.txt /home
+cp ./*-order.txt /home
+```
+Start fuzzing
+```commandline
+/home/WAFLGo/afl-fuzz  -T waflgo-imagemagick -t 1000+ -m none -z exp -c 45m -q 1 -i /home/imagemagick -o /home/out -- /home/waflgo-imagemagick/fuzz/magick.ci  @@ /dev/null
+```
