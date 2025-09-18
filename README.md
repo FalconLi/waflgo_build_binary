@@ -2093,7 +2093,7 @@ cp ./*-order.txt /home
 ```
 Start fuzzing
 ```commandline
-/home/WAFLGo/afl-fuzz  -T waflgo-poppler -t 1000+ -m none -z exp -c 45m -q 1 -i /home/pdf -o /home/out -- /home/waflgo-poppler/fuzz/pdftops.ci @@ /dev/null
+/home/WAFLGo/afl-fuzz  -T waflgo-poppler -t 1000+ -m none -z exp -c 45m -q 1 -i /home/pdf -o /home/out -- /home/waflgo-poppler/fuzz/pdftops.ci @@
 ```
 
 ### poppler-issue-1305
@@ -2302,7 +2302,7 @@ cd /home/waflgo-imagemagick; git checkout a107b941
 ```
 Build Binary
 ```commandline
-export ADD="-g --notI"
+export ADD="-g -static --notI"
 export CC=/home/WAFLGo/afl-clang-fast 
 export CXX=/home/WAFLGo/afl-clang-fast++
 export CFLAGS="$ADD" 
