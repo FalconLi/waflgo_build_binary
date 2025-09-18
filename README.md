@@ -2138,7 +2138,7 @@ EOF
 export AFL_CC=gclang 
 export AFL_CXX=gclang++
 
-cmake . -DCMAKE_TOOLCHAIN_FILE=toolchain.cmake -DENABLE_LIBOPENJPEG=none
+cmake . -DCMAKE_TOOLCHAIN_FILE=toolchain.cmake -DENABLE_LIBOPENJPEG=none -DCMAKE_BUILD_TYPE=Debug   -DBUILD_SHARED_LIBS=OFF
 
 #export ADD="-g --notI"
 #export CC=/home/WAFLGo/afl-clang-fast 
