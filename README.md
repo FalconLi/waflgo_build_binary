@@ -2302,6 +2302,48 @@ cd /home/waflgo-imagemagick; git checkout a107b941
 ```
 Build Binary
 ```commandline
+chmod 1777 /tmp
+apt-get update
+apt-get install -y \
+  libpng-dev \
+  libjpeg-dev \
+  libgif-dev \
+  libtiff-dev \
+  libtiff5-dev \
+  libtiff-tools \
+  libwebp-dev \
+  liblzma-dev \
+  libzstd-dev \
+  libopenjp2-7-dev \
+  libheif-dev
+
+apt-get install -y \
+  librsvg2-dev \
+  libwmf-dev \
+  libgs-dev \
+  libraw-dev \
+  libopenexr-dev \
+  libpango1.0-dev \
+  libfreetype6-dev \
+  libfontconfig1-dev \
+  liblcms2-dev \
+  libexif-dev \
+  liblqr-1-0-dev \
+  libfftw3-dev \
+  libbz2-dev \
+  liblzma-dev \
+  libzstd-dev \
+  libxml2-dev
+
+apt-get install -y \
+  libltdl-dev \
+  libx11-dev \
+  libxext-dev \
+  libxt-dev \
+  zlib1g-dev \
+  pkg-config \
+  libomp-dev
+
 export ADD="-g -static --notI"
 export CC=/home/WAFLGo/afl-clang-fast 
 export CXX=/home/WAFLGo/afl-clang-fast++
@@ -2309,8 +2351,34 @@ export CFLAGS="$ADD"
 export CXXFLAGS="$ADD"
 export AFL_CC=gclang 
 export AFL_CXX=gclang++
-./configure --enable-static --disable-shared --without-python --without-readline LDFLAGS="-static"
+export ac_cv_lib_tiff_TIFFOpen=yes
+export ac_cv_lib_tiff_TIFFClientOpen=yes
+export ac_cv_lib_tiff_TIFFIsByteSwapped=yes
+export ac_cv_lib_tiff_TIFFReadRGBATile=yes
+export ac_cv_lib_tiff_TIFFReadRGBAStrip=yes
+./configure \
+  --enable-static \
+  --disable-shared \
+  --without-python \
+  --without-readline \
+  --enable-zero-configuration \
+  --with-png=yes \
+  --with-jpeg=yes \
+  --with-tiff=yes \
+  --with-gif=yes \
+  --with-webp=yes \
+  --with-openjp2=yes \
+  --with-rsvg=yes \
+  --with-wmf=yes \
+  --with-raw=yes \
+  --with-openexr=yes \
+  --with-lqr=yes \
+  --with-fftw=yes \
+  LDFLAGS="-static" \
+  LIBS="-llzma -lzstd -lwebp -lwebpdemux -lwebpmux"
 
+sed -i 's/\.longitude\[/\.longtitude\[/g' coders/dng.c
+ln -sf /usr/lib/llvm-10/lib/libomp.so.5 /usr/lib/x86_64-linux-gnu/libomp.so
 make clean;make 
 unset AFL_CC AFL_CXX
 
