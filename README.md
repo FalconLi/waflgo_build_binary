@@ -2408,7 +2408,7 @@ cp ./*_data.txt /home
 /home/WAFLGo/afl-clang-fast++ magick.ci.bc \
   /home/waflgo-imagemagick/MagickCore/.libs/libMagickCore-7.Q16HDRI.a \
   /home/waflgo-imagemagick/MagickWand/.libs/libMagickWand-7.Q16HDRI.a \
-  -lxml2 -lz -lpthread -lm -lstdc++ \
+  -llzma -lzstd -lwebp -lwebpdemux -lwebpmux -ljbig -llcms2 -ltiff -lfreetype -ljpeg -llqr-1 -lglib-2.0 -lpng16 -lfftw3 -lfontconfig -lheif -lwmflite -lbz2 -lIlmImf -lImath -lHalf -lIex -lIexMath -lIlmThread -lopenjp2 -lpangocairo-1.0 -lpango-1.0 -lgobject-2.0 -lharfbuzz -lcairo -lraw_r -fopenmp -lrsvg-2 -lgio-2.0 -lgdk_pixbuf-2.0 -lxml2 -lz -lpthread -lm -lstdc++ \
   -o magick.ci
 cp ./bbinfo-fast.txt /home/bbinfo-ci-bc.txt
 cp ./branch-distance-order.txt /home
