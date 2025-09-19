@@ -1998,6 +1998,7 @@ cp ./*-order.txt /home
 ```
 Start fuzzing
 ```commandline
+export LD_LIBRARY_PATH=/home/waflgo-poppler:/home/waflgo-poppler/cpp:/home/waflgo-poppler/glib:$LD_LIBRARY_PATH
 /home/WAFLGo/afl-fuzz  -T waflgo-poppler -t 1000+ -m none -z exp -c 45m -q 1 -i /home/pdf -o /home/out -- /home/waflgo-poppler/fuzz/pdfunite.ci @@ @@ /dev/null
 ```
 
