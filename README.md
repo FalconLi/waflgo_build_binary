@@ -1987,7 +1987,10 @@ cp ./branch-distance-min.txt /home
 cp ./branch-curloc.txt /home
 cp ./*_data.txt /home
 
-/home/WAFLGo/afl-clang-fast++ pdfunite.ci.bc -lstdc++ -lfontconfig -ljpeg -lopenjp2 -o pdfunite.ci
+/home/WAFLGo/afl-clang-fast++ pdfunite.ci.bc \
+  /home/waflgo-poppler-new/libpoppler.so.66.0.0 \
+  /home/waflgo-poppler-new/cpp/libpoppler-cpp.so.0.3.0 \
+  -lstdc++ -lfontconfig -ljpeg -lopenjp2 -o pdfunite.ci
 cp ./bbinfo-fast.txt /home/bbinfo-ci-bc.txt
 cp ./branch-distance-order.txt /home
 cp ./*-distance-order.txt /home
