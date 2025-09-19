@@ -2337,7 +2337,11 @@ cp ./branch-distance-min.txt /home
 cp ./branch-curloc.txt /home
 cp ./*_data.txt /home
 
-/home/WAFLGo/afl-clang-fast++ magick.ci.bc  -lstdc++ -lz -o magick.ci
+/home/WAFLGo/afl-clang-fast++ magick.ci.bc \
+  /home/waflgo-imagemagick/MagickCore/.libs/libMagickCore-7.Q16HDRI.a \
+  /home/waflgo-imagemagick/MagickWand/.libs/libMagickWand-7.Q16HDRI.a \
+  -lxml2 -lz -lpthread -lm -lstdc++ \
+  -o magick.ci
 cp ./bbinfo-fast.txt /home/bbinfo-ci-bc.txt
 cp ./branch-distance-order.txt /home
 cp ./*-distance-order.txt /home
